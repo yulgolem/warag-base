@@ -1,0 +1,7 @@
+# Configuration for local mode
+llm:
+  endpoint: http://localhost:8000
+  model: local-model
+storage:
+  database_url: sqlite:///memory.db
+  redis_host: localhost
