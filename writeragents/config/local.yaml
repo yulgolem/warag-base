@@ -5,3 +5,5 @@ llm:
 storage:
   database_url: sqlite:///memory.db
   redis_host: localhost
+wba:
+  candidate_limit: 3
