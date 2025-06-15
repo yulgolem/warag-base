@@ -42,6 +42,15 @@ class WorldBuildingArchivist:
         """Return the most semantically similar record to ``text``."""
         return self.store.find_similar(text)
 
+    # ------------------------------------------------------------------
+    def get_type_statistics(self) -> dict[str, int]:
+        """Return counts of archived records for each content type."""
+        return self.types.get_type_counts()
+
+    def get_candidate_counts(self) -> dict[str, int]:
+        """Return current unresolved type candidate counts."""
+        return self.types.get_candidate_counts()
+
     def run(self, context):
         # TODO: implement world building logic
         pass

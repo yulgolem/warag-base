@@ -72,3 +72,20 @@ docker compose run --rm app pytest
 This command launches the application container, connects to the
 containerized database and Redis instances, and then invokes `pytest`.
 
+## Running CLI Commands
+
+To invoke the interactive menu or other `writeragents` subcommands from your
+host machine, prefix the command with `docker compose run --rm app`. For
+example:
+
+```bash
+docker compose run --rm app python -m writeragents wba-menu
+```
+
+If the stack is already running with `docker compose up`, swap `run` for
+`exec`:
+
+```bash
+docker compose exec app python -m writeragents wba-menu
+```
+

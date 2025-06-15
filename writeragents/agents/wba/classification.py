@@ -91,3 +91,21 @@ class ContentTypeManager:
         self._candidate_counts[norm] = count
         return None
 
+    # ------------------------------------------------------------------
+    def get_type_counts(self) -> dict[str, int]:
+        """Return a mapping of stored type names to usage count."""
+        counts: dict[str, int] = {}
+        for rec in self.store.data:
+            meta = rec.get("metadata", {})
+            if meta.get("category") == self.CATEGORY:
+                # skip records that represent the types themselves
+                continue
+            type_name = meta.get("type")
+            if type_name:
+                counts[type_name] = counts.get(type_name, 0) + 1
+        return counts
+
+    def get_candidate_counts(self) -> dict[str, int]:
+        """Return how many times unknown type names have been seen."""
+        return dict(self._candidate_counts)
+
