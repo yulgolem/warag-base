@@ -5,12 +5,26 @@ from typing import Any, Dict, Optional, Tuple
 
 import yaml
 
-from storage.long_term import DatabaseMemory
-from storage.short_term import RedisMemory
+from writeragents.storage.long_term import DatabaseMemory
+from writeragents.storage.short_term import RedisMemory
+from importlib import resources
+import os
 
 
 def load_config(path: str) -> Dict[str, Any]:
-    """Load YAML configuration from ``path``."""
+    """Load YAML configuration from ``path``.
+
+    If ``path`` is relative and does not exist on disk, look for the file
+    within the installed ``writeragents`` package.
+    """
+    if not os.path.isabs(path) and not os.path.exists(path):
+        try:
+            pkg_path = resources.files("writeragents").joinpath(path)
+            with pkg_path.open("r", encoding="utf-8") as fh:
+                return yaml.safe_load(fh) or {}
+        except FileNotFoundError:
+            pass
+
     with open(path, "r", encoding="utf-8") as fh:
         return yaml.safe_load(fh) or {}
 
