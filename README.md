@@ -21,3 +21,12 @@ Agents communicate through short-term and long-term storage mechanisms. The CLI 
 3. Iterate on agent interactions and expand storage options.
 
 Additional documentation is available in the [docs/](docs/) directory.
+
+## Makefile Commands
+
+Common development tasks can be run via the provided `Makefile`:
+
+- `make build` – Build the Docker image defined by `Dockerfile`.
+- `make up` – Launch services with Docker Compose.
+- `make test` – Execute the test suite inside the `app` container.
+- `make down` – Stop and remove the Compose services.
