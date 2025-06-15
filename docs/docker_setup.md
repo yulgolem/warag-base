@@ -11,6 +11,9 @@ docker build -t writeragents .
 ```
 
 This creates an image with Python 3.11, Redis and PostgreSQL client libraries pre-installed.
+It also copies example WBA verification documents to `/app/docs/wba_samples` in
+the container. The `WBA_DOCS` environment variable points to this directory for
+easy reference.
 
 ## Run with Docker Compose
 
