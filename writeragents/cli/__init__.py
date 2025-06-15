@@ -45,8 +45,21 @@ def main(
 
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    archive_parser = subparsers.add_parser("archive", help="Archive text using WBA")
+    archive_parser = subparsers.add_parser(
+        "archive", help="Archive text using WBA"
+    )
     archive_parser.add_argument("text", help="Text to archive")
+
+    load_parser = subparsers.add_parser(
+        "load", help="Load a directory of markdown files"
+    )
+    load_parser.add_argument("directory", help="Path to directory with .md files")
+
+    search_parser = subparsers.add_parser("search", help="Search the archive")
+    search_parser.add_argument("query", help="Query text")
+    search_parser.add_argument(
+        "--mode", choices=["keyword", "semantic"], default="keyword"
+    )
 
     write_parser = subparsers.add_parser("write", help="Generate text with WriterAgent")
     write_parser.add_argument("prompt", help="Prompt for WriterAgent")
@@ -68,6 +81,22 @@ def main(
 
         agent = WorldBuildingArchivist()
         agent.archive_text(args.text)
+    elif args.command == "load":
+        from writeragents.agents.wba.agent import WorldBuildingArchivist
+
+        agent = WorldBuildingArchivist()
+        agent.load_markdown_directory(args.directory)
+    elif args.command == "search":
+        from writeragents.agents.wba.agent import WorldBuildingArchivist
+
+        agent = WorldBuildingArchivist()
+        if args.mode == "keyword":
+            results = agent.search_keyword(args.query)
+        else:
+            res, score = agent.search_semantic(args.query)
+            results = [res] if res else []
+        for r in results:
+            print(r["text"])
     elif args.command == "write":
         from writeragents.agents.writer_agent.agent import WriterAgent
 

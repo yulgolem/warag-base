@@ -6,6 +6,11 @@ After installation you can invoke the CLI from any directory using::
 
     python -m writeragents
 
+New commands include::
+
+    python -m writeragents load path/to/mds
+    python -m writeragents search "query" --mode semantic
+
 ## Status
 
 Phase 1 is complete. The project currently provides the CLI utilities and
@@ -48,3 +53,7 @@ Common development tasks can be run via the provided `Makefile`:
 - `make up` – Launch services with Docker Compose.
 - `make test` – Execute the test suite inside the `app` container.
 - `make down` – Stop and remove the Compose services.
+
+You can also start the full stack manually::
+
+    docker compose up
