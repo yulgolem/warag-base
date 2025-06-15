@@ -1,17 +1,29 @@
 # Docker Setup
 
-The project is containerized for easy deployment and reproducibility. A `Dockerfile` will build an environment with Python, Redis (for short-term memory), and database drivers.
+The repository includes a `Dockerfile` and `docker-compose.yml` for building and running WriterAgents with its service dependencies.
 
-## Basic Usage
+## Build the Image
 
-1. Build the image:
-   ```bash
-   docker build -t writeragents .
-   ```
-2. Run the container:
-   ```bash
-   docker run -it writeragents
-   ```
+From the repository root run:
 
-For persistent storage, mount a volume for the database location and configure Redis as needed.
+```bash
+docker build -t writeragents .
+```
 
+This creates an image with Python 3.11, Redis and PostgreSQL client libraries pre-installed.
+
+## Run with Docker Compose
+
+Use `docker-compose` to start PostgreSQL, Redis and the application container:
+
+```bash
+docker-compose up
+```
+
+The application mounts the project directory for live editing. PostgreSQL data is persisted in the `pgdata` volume.
+
+Stop the services with `Ctrl+C` and remove containers using:
+
+```bash
+docker-compose down
+```
