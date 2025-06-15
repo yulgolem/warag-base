@@ -14,5 +14,7 @@ WriterAgents supports two execution modes: **local** and **networked**.
 - Ideal for leveraging larger hosted models.
 - Configure API keys and endpoints in `config/remote.yaml`.
 
-Switch between modes by providing the appropriate configuration file when launching the CLI.
+Launch the application with the ``writeragents`` command. Pass a configuration
+file using ``--config`` or set ``WRITERAGENTS_CONFIG`` in the environment.
+This flag controls which of the modes below is active.
 

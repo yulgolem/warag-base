@@ -14,11 +14,39 @@ The system is composed of the following agents:
 
 Agents communicate through short-term and long-term storage mechanisms. The CLI acts as the main control surface, with plans to extend functionality through a Web UI in upcoming versions.
 
+## Command Line Usage
+
+Run the project with the ``writeragents`` command. By default the CLI loads
+``config/local.yaml`` but this can be overridden either with ``--config`` or via
+environment variables.
+
+```bash
+# explicit config path
+writeragents --config config/remote.yaml
+
+# using environment variables
+WRITERAGENTS_CONFIG=config/remote.yaml DATABASE_URL=postgresql://user:pass@host/db \
+REDIS_HOST=redis.example.com writeragents
+```
+
+Environment variables provide a convenient way to change the database and Redis
+connection details without editing configuration files:
+
+- ``WRITERAGENTS_CONFIG`` – default configuration file path when ``--config`` is
+  omitted.
+- ``DATABASE_URL`` – overrides ``storage.database_url`` from the YAML file.
+- ``REDIS_HOST`` – overrides ``storage.redis_host`` from the YAML file.
+
 ## Roadmap
 
 1. Finalize CLI utilities and configuration management.
 2. Introduce a simple Web UI that mirrors CLI features.
 3. Iterate on agent interactions and expand storage options.
+
+## Roadmap Progress
+
+Phase 1 (CLI and configuration management) is complete. Development is now
+focused on the initial Web UI and deeper agent coordination.
 
 Additional documentation is available in the [docs/](docs/) directory.
 

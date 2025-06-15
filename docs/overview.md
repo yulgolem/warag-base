@@ -14,7 +14,7 @@ Storage Layer (Short- & Long-Term Memory)
 Agents (WBA, Consistency Checker, Creativity Assistant, RAG Search, Writer Agent)
 ```
 
-- **Command Interface**: Users initiate and control runs through the CLI, which will later expand into a Web interface.
+- **Command Interface**: Users initiate and control runs through the CLI, which supports configuration files and environment variables. A Web interface is planned for future releases.
 - **Storage Layer**: Provides short-term memory via Redis and long-term memory via SQLite or PostgreSQL.
 - **Agents**: Each agent performs a discrete task in the writing workflow, ensuring consistent world-building, factual continuity, and stylistic creativity.
 
