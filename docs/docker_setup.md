@@ -45,8 +45,9 @@ and that Docker is configured with the `--gpus` flag.
 ## Model Initialization
 
 The Docker image downloads the `qwen2.5:7b-instruct-q4_k_m` model during the
-build step. On first run the `ollama` service starts the model server with a
-32K context window:
+build step. The Dockerfile briefly launches `ollama serve` so that `ollama pull`
+can fetch the model. On first run the `ollama` service starts the model server
+with a 32K context window:
 
 ```bash
 ollama serve --host 0.0.0.0 --context-size 32768

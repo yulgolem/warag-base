@@ -14,7 +14,11 @@ RUN apt-get update && \
 RUN pip install --no-cache-dir redis psycopg2-binary
 
 # Pre-download the Qwen model for local serving
-RUN ollama pull qwen2.5:7b-instruct-q4_k_m
+RUN ollama serve >/tmp/ollama.log 2>&1 & \
+    pid=$! && \
+    sleep 5 && \
+    ollama pull qwen2.5:7b-instruct-q4_k_m && \
+    kill $pid
 
 # Set work directory
 WORKDIR /app
