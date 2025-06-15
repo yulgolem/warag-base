@@ -36,7 +36,9 @@ The project currently relies on the **FRIDA** model for generating text embeddin
 2. Introduce a simple Web UI that mirrors CLI features.
 3. Iterate on agent interactions and expand storage options.
 
-Additional documentation is available in the [docs/](docs/) directory.
+Additional documentation is available in the [docs/](docs/) directory. See
+[wba_classification.md](docs/wba_classification.md) for details on the
+classification process used by the World Building Archivist.
 
 ## Makefile Commands
 

@@ -1,0 +1,13 @@
+# WBA Content Classification
+
+The World Building Archivist (WBA) organizes information in the RAG store using **content types**. These types are themselves stored as meta‑documents. Each entry has the metadata field `{"category": "content-type"}` so they can be queried separately from ordinary text.
+
+When a new piece of text is archived, the WBA attempts to match the provided type name against the stored meta‑documents:
+
+1. The name is embedded and compared to the embeddings of all saved types.
+2. If the best similarity exceeds the configured threshold, the existing type is reused.
+3. Otherwise the name is tracked as a candidate. After it is seen a set number of times, a new type entry is automatically created.
+
+This approach allows the archive to expand organically. Unknown labels evolve into formal types only when they appear frequently enough.
+
+See the `ContentTypeManager` in `writeragents/agents/wba/classification.py` for the reference implementation.
