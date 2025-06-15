@@ -31,5 +31,19 @@ services:
     ports:
       - "8000:8000"
 
+  ollama:
+    build: .
+    command: ["ollama", "serve", "--host", "0.0.0.0", "--context-size", "32768"]
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+
 volumes:
   pgdata:
+  ollama:
