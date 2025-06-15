@@ -1,6 +1,8 @@
 """Command-line entry point."""
 
 import argparse
+import os
+from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
 import yaml
@@ -31,21 +33,30 @@ def load_config(path: str) -> Dict[str, Any]:
 
 def main(argv: Optional[list[str]] | None = None) -> Tuple[Dict[str, Any], DatabaseMemory, RedisMemory]:
     """Entry point for the CLI."""
+    default_cfg = Path(__file__).resolve().parent.parent / "config" / "local.yaml"
+
     parser = argparse.ArgumentParser(description="Interact with WriterAgents")
     parser.add_argument(
         "--config",
-        default="config/local.yaml",
+        default=os.environ.get("WRITERAG_CONFIG", str(default_cfg)),
         help="Path to config file",
     )
     args = parser.parse_args(argv)
 
-    config = load_config(args.config)
+    config_path = args.config
+    config = load_config(config_path)
 
     storage_cfg = config.get("storage", {})
-    long_term = DatabaseMemory(url=storage_cfg.get("database_url", "sqlite:///memory.db"))
-    short_term = RedisMemory(host=storage_cfg.get("redis_host", "localhost"))
+    database_url = os.environ.get(
+        "DATABASE_URL", storage_cfg.get("database_url", "sqlite:///memory.db")
+    )
+    redis_host = os.environ.get(
+        "REDIS_HOST", storage_cfg.get("redis_host", "localhost")
+    )
+    long_term = DatabaseMemory(url=database_url)
+    short_term = RedisMemory(host=redis_host)
 
-    print(f"Using configuration: {args.config}")
+    print(f"Using configuration: {config_path}")
     return config, long_term, short_term
 
 
