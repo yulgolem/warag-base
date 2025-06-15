@@ -54,3 +54,17 @@ ollama serve --host 0.0.0.0 --context-size 32768
 
 The downloaded model data is stored in the `ollama` Docker volume so repeated
 runs do not trigger new downloads.
+
+## Running Tests
+
+The compose setup provides PostgreSQL and Redis with the same environment
+variables used in the default configuration. To execute the test suite
+against these services run:
+
+```bash
+docker compose run --rm app pytest
+```
+
+This command launches the application container, connects to the
+containerized database and Redis instances, and then invokes `pytest`.
+
