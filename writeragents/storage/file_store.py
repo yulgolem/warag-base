@@ -20,3 +20,9 @@ class FileRAGStore(RAGEmbeddingStore):
     def save(self) -> None:
         with open(self.path, "w", encoding="utf-8") as fh:
             json.dump({"data": self.data, "_next_id": self._next_id}, fh)
+
+    # ------------------------------------------------------------------
+    def clear(self) -> None:
+        """Remove all stored records and save an empty file."""
+        super().clear()
+        self.save()

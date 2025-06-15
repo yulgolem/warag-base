@@ -60,3 +60,73 @@ def test_config_option_parsing(tmp_path, monkeypatch):
     assert config["storage"]["database_url"] == "sqlite:///tmp.db"
     assert db_mem.url == "sqlite:///tmp.db"
     assert redis_mem.host == "otherhost"
+
+
+def _run_menu(monkeypatch, inputs):
+    it = iter(inputs)
+    monkeypatch.setattr("builtins.input", lambda _: next(it))
+    main(["wba-menu"])
+
+
+def test_menu_load_dispatch(monkeypatch):
+    called = {}
+
+    def fake_load(self, path):
+        called["path"] = path
+
+    monkeypatch.setattr(WorldBuildingArchivist, "load_markdown_directory", fake_load)
+    monkeypatch.setenv("WBA_DOCS", "/docs")
+    _run_menu(monkeypatch, ["1", "0"])
+    assert called["path"] == "/docs"
+
+
+def test_menu_keyword_search(monkeypatch):
+    called = {}
+
+    def fake_search(self, term):
+        called["term"] = term
+        return []
+
+    monkeypatch.setattr(WorldBuildingArchivist, "search_keyword", fake_search)
+    _run_menu(monkeypatch, ["2", "hello", "0"])
+    assert called["term"] == "hello"
+
+
+def test_menu_semantic_search(monkeypatch):
+    called = {}
+
+    def fake_search(self, text):
+        called["text"] = text
+        return ({"text": "res"}, 1.0)
+
+    monkeypatch.setattr(WorldBuildingArchivist, "search_semantic", fake_search)
+    _run_menu(monkeypatch, ["3", "hi", "0"])
+    assert called["text"] == "hi"
+
+
+def test_menu_stats(monkeypatch):
+    called = {}
+
+    def fake_stats(self):
+        called["stats"] = True
+        return {}
+
+    def fake_candidates(self):
+        called["cands"] = True
+        return {}
+
+    monkeypatch.setattr(WorldBuildingArchivist, "get_type_statistics", fake_stats)
+    monkeypatch.setattr(WorldBuildingArchivist, "get_candidate_counts", fake_candidates)
+    _run_menu(monkeypatch, ["4", "0"])
+    assert called == {"stats": True, "cands": True}
+
+
+def test_menu_clear(monkeypatch):
+    called = {}
+
+    def fake_clear(self):
+        called["clear"] = True
+
+    monkeypatch.setattr(WorldBuildingArchivist, "clear_archive", fake_clear)
+    _run_menu(monkeypatch, ["5", "0"])
+    assert called["clear"]

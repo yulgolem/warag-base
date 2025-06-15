@@ -10,6 +10,18 @@ New commands include::
 
     python -m writeragents load path/to/mds
     python -m writeragents search "query" --mode semantic
+    python -m writeragents wba-menu
+
+The ``wba-menu`` command launches an interactive prompt for loading markdown
+files, searching existing entries, viewing statistics, and clearing the
+archive. Option 1 automatically loads the sample files under ``docs/wba_samples``
+(or the path in ``$WBA_DOCS``) while option 5 resets the store.
+
+When using Docker Compose you can run menu commands from the host with::
+
+    docker compose run --rm app python -m writeragents wba-menu
+
+If the services are already running, use ``docker compose exec app`` instead of ``run``.
 
 ## Status
 
