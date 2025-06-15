@@ -6,6 +6,14 @@ After installation you can invoke the CLI from any directory using::
 
     python -m writeragents
 
+## Status
+
+Phase 1 is complete. The project currently provides the CLI utilities and
+configuration management.
+Run the CLI as shown above. It loads `writeragents/config/local.yaml` by
+default. Use `--config` or the `WRITERAG_CONFIG` environment variable to select
+a different YAML configuration file, such as `writeragents/config/remote.yaml`.
+
 ## Architecture
 
 The system is composed of the following agents:
