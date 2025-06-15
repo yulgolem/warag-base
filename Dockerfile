@@ -28,4 +28,4 @@ WORKDIR /app
 COPY . /app
 
 # Default command
-CMD ["python", "cli/__init__.py"]
+CMD ["python", "-m", "writeragents"]
