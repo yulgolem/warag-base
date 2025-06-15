@@ -6,3 +6,5 @@ llm:
 storage:
   database_url: postgres://user:pass@db/writeragents
   redis_host: redis
+wba:
+  candidate_limit: 3

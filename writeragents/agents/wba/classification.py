@@ -7,13 +7,33 @@ from writeragents.storage import RAGEmbeddingStore
 
 
 class ContentTypeManager:
-    """Manage content-type metadata using a ``RAGEmbeddingStore``."""
+    """Manage content-type metadata using a ``RAGEmbeddingStore``.
+
+    Parameters
+    ----------
+    store:
+        Optional :class:`~writeragents.storage.rag_store.RAGEmbeddingStore` in
+        which types are stored. If not provided, a new in-memory store is used.
+    threshold:
+        Similarity threshold for reusing an existing type.
+    candidate_limit:
+        How many times an unknown name must be seen before a new type is
+        automatically created.
+    """
 
     CATEGORY = "content-type"
 
-    def __init__(self, store: RAGEmbeddingStore | None = None, threshold: float = 0.8):
+    def __init__(
+        self,
+        store: RAGEmbeddingStore | None = None,
+        threshold: float = 0.8,
+        *,
+        candidate_limit: int = 3,
+    ) -> None:
         self.store = store or RAGEmbeddingStore()
         self.threshold = threshold
+        self.candidate_limit = candidate_limit
+        self._candidate_counts: dict[str, int] = {}
 
     # Helper methods -----------------------------------------------------
     def _embed(self, text: str) -> list[int]:
@@ -47,10 +67,27 @@ class ContentTypeManager:
                 best_score = score
         return best, best_score
 
-    def classify(self, name: str) -> dict:
-        """Return an existing type matching ``name`` or create a new one."""
+    def classify(self, name: str) -> dict | None:
+        """Return an existing type matching ``name`` or create a new one.
+
+        The name is normalized and tracked internally. If a matching stored
+        type meets the similarity ``threshold`` the existing record is
+        returned. Otherwise the name must be seen ``candidate_limit`` times
+        before a new type is added.
+        """
         rec, score = self.find_closest_type(name)
+        norm = name.lower()
+
         if rec and score >= self.threshold:
+            # reset tracking for known names
+            self._candidate_counts.pop(norm, None)
             return rec
-        return self.add_type(name)
+
+        count = self._candidate_counts.get(norm, 0) + 1
+        if count >= self.candidate_limit:
+            self._candidate_counts.pop(norm, None)
+            return self.add_type(name)
+
+        self._candidate_counts[norm] = count
+        return None
 
