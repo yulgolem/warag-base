@@ -22,3 +22,5 @@ Agents (WBA, Consistency Checker, Creativity Assistant, RAG Search, Writer Agent
 
 WriterAgents uses the **FRIDA** model to create Russian embeddings for archived text. These embeddings enable agents to perform retrieval-augmented generation. See [embedding_models.md](embedding_models.md) for more details.
 
+For an explanation of how the system classifies archived text into content types, see [wba_classification.md](wba_classification.md).
+
