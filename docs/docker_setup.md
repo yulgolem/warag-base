@@ -27,3 +27,16 @@ Stop the services with `Ctrl+C` and remove containers using:
 ```bash
 docker-compose down
 ```
+
+## Running Tests
+
+The compose setup provides PostgreSQL and Redis with the same environment
+variables used in the default configuration. To execute the test suite
+against these services run:
+
+```bash
+docker compose run --rm app pytest
+```
+
+This command launches the application container, connects to the
+containerized database and Redis instances, and then invokes `pytest`.
