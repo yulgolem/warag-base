@@ -51,6 +51,12 @@ class WorldBuildingArchivist:
         """Return current unresolved type candidate counts."""
         return self.types.get_candidate_counts()
 
+    # ------------------------------------------------------------------
+    def clear_rag_store(self) -> None:
+        """Remove all archived records and reset classification state."""
+        self.store.clear()
+        self.types = ContentTypeManager(store=self.store)
+
     def run(self, context):
         # TODO: implement world building logic
         pass

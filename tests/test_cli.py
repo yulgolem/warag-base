@@ -1,5 +1,7 @@
 import yaml
 
+import os
+from pathlib import Path
 from importlib import resources
 
 import pytest
@@ -74,9 +76,19 @@ def test_menu_load_dispatch(monkeypatch):
     def fake_load(self, path):
         called["path"] = path
 
-    monkeypatch.setattr(WorldBuildingArchivist, "load_markdown_directory", fake_load)
-    _run_menu(monkeypatch, ["1", "/docs", "0"])
-    assert called["path"] == "/docs"
+    monkeypatch.setattr(
+        WorldBuildingArchivist, "load_markdown_directory", fake_load
+    )
+    _run_menu(monkeypatch, ["1", "0"])
+    sample_dir = os.environ.get(
+        "WBA_DOCS",
+        str(
+            Path(__file__).resolve().parent.parent
+            / "docs"
+            / "wba_samples"
+        ),
+    )
+    assert called["path"] == sample_dir
 
 
 def test_menu_keyword_search(monkeypatch):
@@ -118,3 +130,14 @@ def test_menu_stats(monkeypatch):
     monkeypatch.setattr(WorldBuildingArchivist, "get_candidate_counts", fake_candidates)
     _run_menu(monkeypatch, ["4", "0"])
     assert called == {"stats": True, "cands": True}
+
+
+def test_menu_clear_store(monkeypatch):
+    called = {}
+
+    def fake_clear(self):
+        called["cleared"] = True
+
+    monkeypatch.setattr(WorldBuildingArchivist, "clear_rag_store", fake_clear)
+    _run_menu(monkeypatch, ["5", "0"])
+    assert called == {"cleared": True}

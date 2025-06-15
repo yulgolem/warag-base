@@ -20,3 +20,9 @@ class FileRAGStore(RAGEmbeddingStore):
     def save(self) -> None:
         with open(self.path, "w", encoding="utf-8") as fh:
             json.dump({"data": self.data, "_next_id": self._next_id}, fh)
+
+    def clear(self) -> None:  # pragma: no cover - simple file removal
+        """Delete all records and remove the JSON file if it exists."""
+        super().clear()
+        if os.path.exists(self.path):
+            os.remove(self.path)

@@ -52,3 +52,9 @@ class RAGEmbeddingStore:
                 best_score = score
         return best, best_score
 
+    # ------------------------------------------------------------------
+    def clear(self) -> None:
+        """Remove all stored records."""
+        self.data = []
+        self._next_id = 1
+

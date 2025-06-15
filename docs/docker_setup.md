@@ -89,3 +89,7 @@ If the stack is already running with `docker compose up`, swap `run` for
 docker compose exec app python -m writeragents wba-menu
 ```
 
+Option `1` of the menu automatically imports the verification markdown files
+from the directory pointed to by the `WBA_DOCS` environment variable (by
+default `/app/docs/wba_samples`). Option `5` wipes the RAG store.
+
