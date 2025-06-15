@@ -1,0 +1,9 @@
+[project]
+name = "writeragents"
+version = "0.1.0"
+description = "Multi-agent storytelling tools"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[project.scripts]
+writeragents = "writeragents.cli:main"

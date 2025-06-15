@@ -1,4 +1,4 @@
-from storage import RAGEmbeddingStore
+from writeragents.storage import RAGEmbeddingStore
 
 
 class WorldBuildingArchivist:

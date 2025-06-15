@@ -1,11 +1,7 @@
-import os
-import sys
 import pytest
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from agents.wba.agent import WorldBuildingArchivist
-from storage import RAGEmbeddingStore
+from writeragents.agents.wba.agent import WorldBuildingArchivist
+from writeragents.storage import RAGEmbeddingStore
 
 
 def test_archive_text_stores_record():

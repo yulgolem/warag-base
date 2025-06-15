@@ -2,6 +2,10 @@
 
 WriterAgents orchestrates multiple specialized agents to collaboratively craft stories and documentation. This project began as a command-line interface and is evolving toward a Web-based UI for richer interactions.
 
+After installation you can invoke the CLI from any directory using::
+
+    python -m writeragents
+
 ## Architecture
 
 The system is composed of the following agents:

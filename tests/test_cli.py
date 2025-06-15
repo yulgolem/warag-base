@@ -1,17 +1,13 @@
-import os
-import sys
-
 import yaml
+from importlib import resources
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from cli import main
+from writeragents.cli import main
 
 
 def test_default_config_loading():
     config, db_mem, redis_mem = main([])
-    with open('config/local.yaml') as fh:
-        expected = yaml.safe_load(fh)
+    text = resources.files("writeragents").joinpath("config/local.yaml").read_text()
+    expected = yaml.safe_load(text)
 
     assert config == expected
     assert db_mem.url == expected['storage']['database_url']
