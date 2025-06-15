@@ -26,6 +26,10 @@ The system is composed of the following agents:
 
 Agents communicate through short-term and long-term storage mechanisms. The CLI acts as the main control surface, with plans to extend functionality through a Web UI in upcoming versions.
 
+## Language Support
+
+The project currently relies on the **FRIDA** model for generating text embeddings in Russian. These embeddings power search and retrieval operations across the agents.
+
 ## Roadmap
 
 1. Finalize CLI utilities and configuration management.
