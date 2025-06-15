@@ -4,12 +4,19 @@ from importlib import resources
 
 import pytest
 
-
 from writeragents.cli import main
+from writeragents.agents.writer_agent.agent import WriterAgent
+from writeragents.agents.wba.agent import WorldBuildingArchivist
 
 
-def test_default_config_loading():
-    config, db_mem, redis_mem = main([])
+def test_default_config_loading(monkeypatch):
+    called = {}
+
+    def fake_archive(self, text):
+        called["text"] = text
+
+    monkeypatch.setattr(WorldBuildingArchivist, "archive_text", fake_archive)
+    config, db_mem, redis_mem = main(["archive", "hello"])
     text = resources.files("writeragents").joinpath("config/local.yaml").read_text()
     expected = yaml.safe_load(text)
 
