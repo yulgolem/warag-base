@@ -19,7 +19,7 @@ services:
 
   app:
     build: .
-    command: ["python", "cli/__init__.py"]
+    command: ["python", "-m", "writeragents"]
     volumes:
       - .:/app
     environment:
