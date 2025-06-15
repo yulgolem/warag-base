@@ -11,7 +11,8 @@ RUN apt-get update && \
     curl -fsSL https://ollama.com/install.sh | sh
 
 # Install Python dependencies
-RUN pip install --no-cache-dir redis psycopg2-binary
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Pre-download the Qwen model for local serving
 RUN ollama serve >/tmp/ollama.log 2>&1 & \
