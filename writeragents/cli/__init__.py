@@ -10,7 +10,6 @@ import yaml
 from writeragents.storage.long_term import DatabaseMemory
 from writeragents.storage.short_term import RedisMemory
 from importlib import resources
-import os
 
 
 def load_config(path: str) -> Dict[str, Any]:
@@ -65,12 +64,12 @@ def main(
     short_term = RedisMemory(host=storage_cfg.get("redis_host", "localhost"))
 
     if args.command == "archive":
-        from agents.wba.agent import WorldBuildingArchivist
+        from writeragents.agents.wba.agent import WorldBuildingArchivist
 
         agent = WorldBuildingArchivist()
         agent.archive_text(args.text)
     elif args.command == "write":
-        from agents.writer_agent.agent import WriterAgent
+        from writeragents.agents.writer_agent.agent import WriterAgent
 
         agent = WriterAgent()
         agent.run(args.prompt)
