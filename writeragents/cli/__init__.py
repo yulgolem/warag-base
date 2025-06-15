@@ -111,12 +111,21 @@ def main(
                 "2) Keyword search\n"
                 "3) Semantic search\n"
                 "4) Show type stats\n"
+                "5) Clear RAG store\n"
                 "0) Exit\n"
                 "Select option: "
             ).strip()
             if choice == "1":
-                path = input("Directory path: ")
-                agent.load_markdown_directory(path)
+                sample_dir = os.environ.get(
+                    "WBA_DOCS",
+                    str(
+                        Path(__file__).resolve().parent.parent.parent
+                        / "docs"
+                        / "wba_samples"
+                    ),
+                )
+                print(f"Loading sample markdown from {sample_dir}")
+                agent.load_markdown_directory(sample_dir)
             elif choice == "2":
                 term = input("Keyword: ")
                 results = agent.search_keyword(term)
@@ -136,6 +145,9 @@ def main(
                 print("Unresolved candidates:")
                 for name, count in candidate_counts.items():
                     print(f"  {name}: {count}")
+            elif choice == "5":
+                agent.clear_rag_store()
+                print("RAG store cleared")
             elif choice == "0":
                 break
     elif args.command == "write":

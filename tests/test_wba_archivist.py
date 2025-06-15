@@ -14,3 +14,12 @@ def test_archive_text_stores_record():
     assert isinstance(record["embedding"], list)
     assert len(record["embedding"]) == 8
 
+
+def test_clear_rag_store_resets_data():
+    store = RAGEmbeddingStore()
+    wba = WorldBuildingArchivist(store=store)
+    wba.archive_text("text")
+    assert store.data
+    wba.clear_rag_store()
+    assert store.data == []
+
