@@ -26,6 +26,9 @@ WORKDIR /app
 
 # Copy source
 COPY . /app
+# Include WBA sample verification documents
+COPY docs/wba_samples /app/docs/wba_samples
+ENV WBA_DOCS=/app/docs/wba_samples
 
 # Default command
 CMD ["python", "-m", "writeragents"]
