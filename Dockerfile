@@ -13,7 +13,7 @@ RUN apt-get update && \
 # Install Python dependencies
 RUN pip install --no-cache-dir redis psycopg2-binary
 
-# Pre-download the Quwen model for local serving
+# Pre-download the Qwen model for local serving
 RUN ollama pull qwen2.5:7b-instruct-q4_k_m
 
 # Set work directory

@@ -14,10 +14,10 @@ This creates an image with Python 3.11, Redis and PostgreSQL client libraries pr
 
 ## Run with Docker Compose
 
-Use `docker-compose` to start PostgreSQL, Redis and the application container:
+Use `docker compose` to start PostgreSQL, Redis and the application container:
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 The application mounts the project directory for live editing. PostgreSQL data is persisted in the `pgdata` volume.
@@ -25,7 +25,7 @@ The application mounts the project directory for live editing. PostgreSQL data i
 Stop the services with `Ctrl+C` and remove containers using:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ## GPU Requirements for Ollama
