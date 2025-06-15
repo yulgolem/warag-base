@@ -1,11 +1,12 @@
 import os
 import sys
-import pytest
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+)
 
-from agents.wba.agent import WorldBuildingArchivist
-from storage import RAGEmbeddingStore
+from agents.wba.agent import WorldBuildingArchivist  # noqa: E402
+from storage import RAGEmbeddingStore  # noqa: E402
 
 
 def test_archive_text_stores_record():
@@ -17,4 +18,3 @@ def test_archive_text_stores_record():
     assert record["text"] == "hello world"
     assert isinstance(record["embedding"], list)
     assert len(record["embedding"]) == 8
-

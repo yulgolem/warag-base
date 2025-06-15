@@ -7,7 +7,8 @@ class RAGEmbeddingStore:
 
     def _embed(self, text):
         import hashlib
-        digest = hashlib.sha256(text.encode('utf-8')).digest()
+
+        digest = hashlib.sha256(text.encode("utf-8")).digest()
         # return first 8 bytes as ints for deterministic small embedding
         return [b for b in digest[:8]]
 
@@ -21,4 +22,3 @@ class RAGEmbeddingStore:
         self.data.append(record)
         self._next_id += 1
         return record
-

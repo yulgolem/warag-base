@@ -1,7 +1,8 @@
 """Long-term memory using SQLite or PostgreSQL."""
 
+
 class DatabaseMemory:
-    def __init__(self, url='sqlite:///memory.db'):
+    def __init__(self, url="sqlite:///memory.db"):
         self.url = url
         # TODO: initialize database connection
 

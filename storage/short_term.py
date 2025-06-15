@@ -1,7 +1,8 @@
 """Short-term memory using Redis."""
 
+
 class RedisMemory:
-    def __init__(self, host='localhost', port=6379):
+    def __init__(self, host="localhost", port=6379):
         self.host = host
         self.port = port
         # TODO: initialize Redis connection
