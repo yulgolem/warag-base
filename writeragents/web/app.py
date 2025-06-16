@@ -2,11 +2,11 @@ import logging
 import os
 from flask import Flask, jsonify, render_template_string, request
 
-from writeragents.agents.writer_agent.agent import WriterAgent
+from writeragents.agents.orchestrator.agent import Orchestrator
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
-agent = WriterAgent()
+agent = Orchestrator()
 
 INDEX_HTML = """
 <!doctype html>

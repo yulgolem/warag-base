@@ -7,7 +7,7 @@ from importlib import resources
 import pytest
 
 from writeragents.cli import main
-from writeragents.agents.writer_agent.agent import WriterAgent
+from writeragents.agents.orchestrator.agent import Orchestrator
 from writeragents.agents.wba.agent import WorldBuildingArchivist
 
 
@@ -34,7 +34,7 @@ def test_write_command_dispatch(monkeypatch):
     def fake_run(self, prompt):
         called["prompt"] = prompt
 
-    monkeypatch.setattr(WriterAgent, "run", fake_run)
+    monkeypatch.setattr(Orchestrator, "run", fake_run)
     main(["write", "Begin"])
     assert called["prompt"] == "Begin"
 
@@ -50,7 +50,7 @@ def test_config_option_parsing(tmp_path, monkeypatch):
     def fake_run(self, prompt):
         called["prompt"] = prompt
 
-    monkeypatch.setattr(WriterAgent, "run", fake_run)
+    monkeypatch.setattr(Orchestrator, "run", fake_run)
     config, db_mem, redis_mem = main([
         "--config",
         str(cfg),
