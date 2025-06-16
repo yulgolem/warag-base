@@ -2,3 +2,4 @@ pyyaml
 redis
 psycopg2-binary
 pytest
+flask
