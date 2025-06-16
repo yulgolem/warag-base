@@ -27,3 +27,16 @@ def test_archive_intent(monkeypatch):
     assert called['archive'] == 'test text'
     assert result == 'Archived'
 
+
+def test_structure_intent(monkeypatch):
+    called = {}
+
+    def fake_run(self, text):
+        called['text'] = text
+        return 'report'
+
+    orch = Orchestrator()
+    monkeypatch.setattr(orch, 'structure_analyst', type('S', (), {'run': fake_run})())
+    result = orch.run('structure: the story')
+    assert called['text'] == 'the story'
+    assert result == 'report'
