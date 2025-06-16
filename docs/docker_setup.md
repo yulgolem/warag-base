@@ -104,3 +104,10 @@ docker compose run --rm -p 5000:5000 app python -m writeragents.web.app
 If the services are already up, use `docker compose exec app` in place of
 `run`.
 
+Open `http://localhost:5000` in your browser to access the chat UI. Logs of
+each message appear in the container output, which you can view with:
+
+```bash
+docker compose logs -f app
+```
+
