@@ -2,5 +2,6 @@
 
 from .agent import WorldBuildingArchivist
 from .classification import ContentTypeManager
+from .faceted import FacetManager
 
-__all__ = ["WorldBuildingArchivist", "ContentTypeManager"]
+__all__ = ["WorldBuildingArchivist", "ContentTypeManager", "FacetManager"]

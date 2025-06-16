@@ -11,3 +11,11 @@ When a new piece of text is archived, the WBA attempts to match the provided typ
 This approach allows the archive to expand organically. Unknown labels evolve into formal types only when they appear frequently enough.
 
 See the `ContentTypeManager` in `writeragents/agents/wba/classification.py` for the reference implementation.
+
+## Faceted classification
+
+Beyond simple content types the archivist can track arbitrary **facets** such as
+`type` or `era`. Each facet is handled by a dedicated `ContentTypeManager`
+instance within ``FacetManager``. When a facet value is seen often enough it is
+saved as a meta-document with ``{"category": "facet-<name>"}``. Future archives
+then store the normalized value in the chunk metadata.
