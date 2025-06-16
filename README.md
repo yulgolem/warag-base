@@ -29,6 +29,8 @@ To start the Web UI from your host, publish port ``5000`` and run::
     docker compose run --rm -p 5000:5000 app python -m writeragents.web.app
 
 Again, replace ``run`` with ``exec`` if the container is already running.
+Then open `http://localhost:5000` in your browser to access the chat interface.
+View the chat logs with ``docker compose logs -f app``.
 
 ## Status
 

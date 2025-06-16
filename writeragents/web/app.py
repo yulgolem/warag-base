@@ -1,8 +1,10 @@
+import logging
 from flask import Flask, jsonify, render_template_string, request
 
 from writeragents.agents.writer_agent.agent import WriterAgent
 
 app = Flask(__name__)
+logging.basicConfig(level=logging.INFO)
 agent = WriterAgent()
 
 INDEX_HTML = """
@@ -56,5 +58,7 @@ def index() -> str:
 def chat():
     """Return agent response to posted message."""
     msg = request.json.get('message', '')
+    app.logger.info("User: %s", msg)
     response = agent.run(msg)
+    app.logger.info("Agent: %s", response)
     return jsonify({'response': response})
