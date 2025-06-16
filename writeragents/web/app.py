@@ -1,4 +1,5 @@
 import logging
+import os
 from flask import Flask, jsonify, render_template_string, request
 
 from writeragents.agents.writer_agent.agent import WriterAgent
@@ -62,3 +63,7 @@ def chat():
     response = agent.run(msg)
     app.logger.info("Agent: %s", response)
     return jsonify({'response': response})
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
