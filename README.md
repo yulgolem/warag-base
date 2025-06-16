@@ -66,10 +66,12 @@ The project currently relies on the **FRIDA** model for generating text embeddin
 
    This opens a minimal chat page at `http://localhost:5000`.
 3. Iterate on agent interactions and expand storage options.
+4. Add an [orchestrator](docs/orchestrator.md) to direct all agents.
+5. Expand the WBA with [self-organizing classification](docs/wba_classification.md).
+6. Incorporate a robust [consistency checker](docs/consistency_checker.md).
+7. Build a [story-structure analysis](docs/story_structure.md) module.
 
-Additional documentation is available in the [docs/](docs/) directory. See
-[wba_classification.md](docs/wba_classification.md) for details on the
-classification process used by the World Building Archivist.
+Additional documentation is available in the [docs/](docs/) directory.
 
 ## Makefile Commands
 

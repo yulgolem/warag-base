@@ -1,6 +1,6 @@
 # WBA Content Classification
 
-The World Building Archivist (WBA) organizes information in the RAG store using **content types**. These types are themselves stored as meta‑documents. Each entry has the metadata field `{"category": "content-type"}` so they can be queried separately from ordinary text.
+The World Building Archivist (WBA) organizes information in the RAG store using **content types**. This **self‑organizing classification** system stores the types as meta‑documents. Each entry has the metadata field `{"category": "content-type"}` so they can be queried separately from ordinary text.
 
 When a new piece of text is archived, the WBA attempts to match the provided type name against the stored meta‑documents:
 
