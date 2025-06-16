@@ -61,8 +61,10 @@ def main(
         "--mode", choices=["keyword", "semantic"], default="keyword"
     )
 
-    write_parser = subparsers.add_parser("write", help="Generate text with WriterAgent")
-    write_parser.add_argument("prompt", help="Prompt for WriterAgent")
+    write_parser = subparsers.add_parser(
+        "write", help="Send a request through the agent orchestrator"
+    )
+    write_parser.add_argument("prompt", help="User request")
 
     menu_parser = subparsers.add_parser(
         "wba-menu", help="Interactive WorldBuildingArchivist menu"
@@ -151,9 +153,9 @@ def main(
             elif choice == "0":
                 break
     elif args.command == "write":
-        from writeragents.agents.writer_agent.agent import WriterAgent
+        from writeragents.agents.orchestrator.agent import Orchestrator
 
-        agent = WriterAgent()
+        agent = Orchestrator()
         agent.run(args.prompt)
 
     print(f"Using configuration: {args.config}")
