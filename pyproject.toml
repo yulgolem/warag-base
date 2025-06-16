@@ -5,5 +5,14 @@ description = "Multi-agent storytelling tools"
 readme = "README.md"
 requires-python = ">=3.10"
 
+[project.dependencies]
+pyyaml = "*"
+redis = "*"
+psycopg2-binary = "*"
+flask = "*"
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
 [project.scripts]
 writeragents = "writeragents.cli:main"
