@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import math
+import logging
 from typing import Tuple
+
+logger = logging.getLogger(__name__)
 
 from writeragents.storage import RAGEmbeddingStore
 
@@ -34,6 +37,7 @@ class ContentTypeManager:
         self.threshold = threshold
         self.candidate_limit = candidate_limit
         self._candidate_counts: dict[str, int] = {}
+        self._classification_log: list[str] = []
 
     # Helper methods -----------------------------------------------------
     def _embed(self, text: str) -> list[int]:
@@ -51,7 +55,11 @@ class ContentTypeManager:
     # Public API ---------------------------------------------------------
     def add_type(self, name: str) -> dict:
         """Add a new content type to the store."""
-        return self.store.add_entry(name, metadata={"category": self.CATEGORY})
+        record = self.store.add_entry(name, metadata={"category": self.CATEGORY})
+        msg = f"Created new type '{name}'"
+        logger.info(msg)
+        self._classification_log.append(msg)
+        return record
 
     def find_closest_type(self, name: str) -> Tuple[dict | None, float]:
         """Return the closest stored type to ``name`` and similarity score."""
@@ -81,6 +89,11 @@ class ContentTypeManager:
         if rec and score >= self.threshold:
             # reset tracking for known names
             self._candidate_counts.pop(norm, None)
+            msg = (
+                f"Reusing type '{rec['text']}' for '{name}' with score {score:.2f}"
+            )
+            logger.info(msg)
+            self._classification_log.append(msg)
             return rec
 
         count = self._candidate_counts.get(norm, 0) + 1
@@ -89,6 +102,9 @@ class ContentTypeManager:
             return self.add_type(name)
 
         self._candidate_counts[norm] = count
+        msg = f"Incremented candidate count for '{norm}' to {count}"
+        logger.info(msg)
+        self._classification_log.append(msg)
         return None
 
     # ------------------------------------------------------------------
@@ -108,4 +124,8 @@ class ContentTypeManager:
     def get_candidate_counts(self) -> dict[str, int]:
         """Return how many times unknown type names have been seen."""
         return dict(self._candidate_counts)
+
+    def get_classification_log(self) -> list[str]:
+        """Return recorded classification events for auditing."""
+        return list(self._classification_log)
 

@@ -1,4 +1,5 @@
 from writeragents.agents.wba.classification import ContentTypeManager
+import logging
 from writeragents.agents.wba.faceted import FacetManager
 from writeragents.storage import RAGEmbeddingStore
 
@@ -40,4 +41,20 @@ def test_facet_manager_autocreate():
     assert rec["text"] == "Bronze Age"
     assert rec["metadata"]["category"] == "facet-era"
     assert len([r for r in store.data if r.get("metadata", {}).get("category") == "facet-era"]) == 1
+
+
+def test_classification_logging(caplog):
+    store = RAGEmbeddingStore()
+    manager = ContentTypeManager(store=store, threshold=0.9, candidate_limit=2)
+    with caplog.at_level(logging.INFO):
+        assert manager.classify("Location") is None
+        manager.classify("Location")
+        manager.classify("location")
+
+    msgs = caplog.messages
+    assert any("Incremented candidate count for 'location' to 1" in m for m in msgs)
+    assert any("Created new type 'Location'" in m for m in msgs)
+    assert any("Reusing type 'Location'" in m for m in msgs)
+    log = manager.get_classification_log()
+    assert "Incremented candidate count for 'location' to 1" in log[0]
 
