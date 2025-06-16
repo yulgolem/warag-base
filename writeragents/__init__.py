@@ -1,3 +1,3 @@
 """WriterAgents package."""
 
-__all__ = ["cli", "agents", "storage"]
+__all__ = ["cli", "agents", "storage", "web"]

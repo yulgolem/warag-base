@@ -93,3 +93,14 @@ Option `1` of the menu automatically imports the verification markdown files
 from the directory pointed to by the `WBA_DOCS` environment variable (by
 default `/app/docs/wba_samples`). Option `5` wipes the RAG store.
 
+## Running the Web UI
+
+To experiment with the simple chat interface, publish port `5000` and run:
+
+```bash
+docker compose run --rm -p 5000:5000 app python -m writeragents.web.app
+```
+
+If the services are already up, use `docker compose exec app` in place of
+`run`.
+

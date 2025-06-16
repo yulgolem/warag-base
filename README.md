@@ -24,10 +24,17 @@ When using Docker Compose you can run menu commands from the host with::
 
 If the services are already running, use ``docker compose exec app`` instead of ``run``.
 
+To start the Web UI from your host, publish port ``5000`` and run::
+
+    docker compose run --rm -p 5000:5000 app python -m writeragents.web.app
+
+Again, replace ``run`` with ``exec`` if the container is already running.
+
 ## Status
 
 Phase 1 is complete. The project currently provides the CLI utilities and
-configuration management.
+configuration management. A lightweight Web chat interface is also included as
+the starting point for phase 2.
 Run the CLI as shown above. It loads `writeragents/config/local.yaml` by
 default. Use `--config` or the `WRITERAG_CONFIG` environment variable to select
 a different YAML configuration file, such as `writeragents/config/remote.yaml`.
@@ -51,7 +58,11 @@ The project currently relies on the **FRIDA** model for generating text embeddin
 ## Roadmap
 
 1. Finalize CLI utilities and configuration management.
-2. Introduce a simple Web UI that mirrors CLI features.
+2. Introduce a simple Web UI that mirrors CLI features. Launch it with::
+
+       python -m writeragents.web.app
+
+   This opens a minimal chat page at `http://localhost:5000`.
 3. Iterate on agent interactions and expand storage options.
 
 Additional documentation is available in the [docs/](docs/) directory. See
