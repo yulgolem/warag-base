@@ -86,3 +86,15 @@ Common development tasks can be run via the provided `Makefile`:
 You can also start the full stack manually::
 
     docker compose up
+
+## Running Tests Locally
+
+Install dependencies in editable mode with the development extras::
+
+    pip install -e .[dev]
+
+Then execute `pytest` from the project root:
+
+    pytest -q
+
+All tests should pass without additional configuration.
