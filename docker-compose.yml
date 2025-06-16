@@ -33,7 +33,7 @@ services:
 
   ollama:
     build: .
-    command: ["ollama", "serve", "--host", "0.0.0.0", "--context-size", "32768"]
+    entrypoint: ["entrypoint_ollama.sh"]
     ports:
       - "11434:11434"
     volumes:

@@ -14,12 +14,9 @@ RUN apt-get update && \
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Pre-download the Qwen model for local serving
-RUN ollama serve >/tmp/ollama.log 2>&1 & \
-    pid=$! && \
-    sleep 5 && \
-    ollama pull qwen2.5:7b-instruct-q4_k_m && \
-    kill $pid
+# Copy runtime helper script for Ollama
+COPY entrypoint_ollama.sh /usr/local/bin/entrypoint_ollama.sh
+RUN chmod +x /usr/local/bin/entrypoint_ollama.sh
 
 # Set work directory
 WORKDIR /app
