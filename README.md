@@ -70,6 +70,7 @@ The project currently relies on the **FRIDA** model for generating text embeddin
 5. Expand the WBA with [self-organizing classification](docs/wba_classification.md).
 6. Incorporate a robust [consistency checker](docs/consistency_checker.md).
 7. Build a [story-structure analysis](docs/story_structure.md) module.
+8. See [docs/roadmap.md](docs/roadmap.md) for the full development roadmap, including plans for model integration, dynamic plot structures, and configuration improvements.
 
 Additional documentation is available in the [docs/](docs/) directory.
 
