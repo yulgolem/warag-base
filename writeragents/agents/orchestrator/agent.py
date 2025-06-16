@@ -5,6 +5,7 @@ from writeragents.agents.consistency_checker.agent import ConsistencyChecker
 from writeragents.agents.creativity_assistant.agent import CreativityAssistant
 from writeragents.agents.rag_search.agent import RAGSearchAgent
 from writeragents.agents.writer_agent.agent import WriterAgent
+from writeragents.agents.story_structure_analyst.agent import StoryStructureAnalyst
 
 
 class Orchestrator:
@@ -16,6 +17,7 @@ class Orchestrator:
         self.creativity_assistant = CreativityAssistant()
         self.rag_search_agent = RAGSearchAgent()
         self.writer_agent = WriterAgent()
+        self.structure_analyst = StoryStructureAnalyst()
 
     # ------------------------------------------------------------------
     def _parse_intent(self, request: str) -> tuple[str | None, str]:
@@ -47,6 +49,8 @@ class Orchestrator:
         if intent == "search":
             result = self.rag_search_agent.run(content)
             return result if result is not None else ""
+        if intent in {"structure", "analysis", "analyze"}:
+            return self.structure_analyst.run(content)
 
         return self.writer_agent.run(request)
 
