@@ -26,6 +26,8 @@ def test_default_config_loading(monkeypatch):
     assert config == expected
     assert db_mem.url == expected["storage"]["database_url"]
     assert redis_mem.host == expected["storage"]["redis_host"]
+    assert redis_mem.port == expected["storage"]["redis_port"]
+    assert redis_mem.db == expected["storage"]["redis_db"]
 
 
 def test_write_command_dispatch(monkeypatch):
@@ -42,7 +44,11 @@ def test_write_command_dispatch(monkeypatch):
 def test_config_option_parsing(tmp_path, monkeypatch):
     cfg = tmp_path / "cfg.yaml"
     cfg.write_text(
-        "storage:\n  database_url: sqlite:///tmp.db\n  redis_host: otherhost\n"
+        "storage:\n"
+        "  database_url: sqlite:///tmp.db\n"
+        "  redis_host: otherhost\n"
+        "  redis_port: 6380\n"
+        "  redis_db: 2\n"
     )
 
     called = {}
@@ -62,6 +68,8 @@ def test_config_option_parsing(tmp_path, monkeypatch):
     assert config["storage"]["database_url"] == "sqlite:///tmp.db"
     assert db_mem.url == "sqlite:///tmp.db"
     assert redis_mem.host == "otherhost"
+    assert redis_mem.port == 6380
+    assert redis_mem.db == 2
 
 
 def test_candidate_limit_default(monkeypatch):

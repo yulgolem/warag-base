@@ -11,6 +11,7 @@ class RedisMemory:
     def __init__(self, host: str = "localhost", port: int = 6379, db: int = 0) -> None:
         self.host = host
         self.port = port
+        self.db = db
         self.client = redis.Redis(host=host, port=port, db=db)
 
     # ------------------------------------------------------------------
