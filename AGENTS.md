@@ -17,3 +17,7 @@ This repository hosts the **WriterAgents** project.
 - After modifying files, run the test suite and ensure it passes.
 - Summaries of pull requests must cite relevant file lines using
   `F:path#Lstart(-Lend)?` notation and mention test results.
+ 
+## Limitations
+You cannot edit any document in docs/wba_samples/ , they are plain samples
+and must stay intact.
