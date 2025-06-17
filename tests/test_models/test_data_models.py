@@ -10,8 +10,11 @@ def test_entity_model_fields():
         name="John",
         type="person",
         description="Hero",
+        mentions=["John", "Johnny"],
         source_file="story.md",
         chunk_id="c1",
+        source_chunk="John went to the market.",
+        context="...John went to the...",
         confidence=0.95,
     )
 
@@ -19,8 +22,11 @@ def test_entity_model_fields():
     assert entity.name == "John"
     assert entity.type == "person"
     assert entity.description == "Hero"
+    assert entity.mentions == ["John", "Johnny"]
     assert entity.source_file == "story.md"
     assert entity.chunk_id == "c1"
+    assert entity.source_chunk == "John went to the market."
+    assert entity.context == "...John went to the..."
     assert entity.confidence == 0.95
 
 
@@ -30,11 +36,14 @@ def test_entity_optional_fields_defaults():
         type="object",
         source_file="story.md",
         chunk_id="c2",
+        source_chunk="A shiny sword lies here.",
+        context="...sword lies here...",
         confidence=0.8,
     )
 
     assert entity.id is None
     assert entity.description is None
+    assert entity.mentions == []
 
 
 def test_relationship_model_fields():
@@ -44,6 +53,7 @@ def test_relationship_model_fields():
         relation_type="friend",
         description="Childhood friends",
         confidence=0.9,
+        source_text="John and Mary have been friends since childhood.",
     )
 
     assert rel.source_entity == "John"
@@ -51,6 +61,7 @@ def test_relationship_model_fields():
     assert rel.relation_type == "friend"
     assert rel.description == "Childhood friends"
     assert rel.confidence == 0.9
+    assert rel.source_text == "John and Mary have been friends since childhood."
 
 
 def test_relationship_missing_required():

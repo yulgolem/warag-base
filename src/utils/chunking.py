@@ -104,8 +104,8 @@ def _add_overlap(chunks: List[str], overlap_tokens: int, tokenizer) -> List[str]
         prev_tokens = tokenizer.encode(prev_chunk)
         if len(prev_tokens) >= overlap_tokens:
             overlap_text = tokenizer.decode(prev_tokens[-overlap_tokens:])
-            new_chunk = overlap_text + current_chunk
+            new_chunk = overlap_text + " " + current_chunk
         else:
-            new_chunk = prev_chunk + current_chunk
+            new_chunk = prev_chunk + " " + current_chunk
         overlapped.append(new_chunk)
     return overlapped

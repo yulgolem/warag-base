@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -12,6 +12,9 @@ class Entity(BaseModel):
     name: str
     type: str
     description: Optional[str] = None
+    mentions: List[str] = []
+    confidence: float
     source_file: str
     chunk_id: str
-    confidence: float
+    source_chunk: str
+    context: str
