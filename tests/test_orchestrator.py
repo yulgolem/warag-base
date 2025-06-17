@@ -40,3 +40,73 @@ def test_structure_intent(monkeypatch):
     result = orch.run('structure: the story')
     assert called['text'] == 'the story'
     assert result == 'report'
+
+
+def test_check_intent(monkeypatch):
+    called = {}
+
+    def fake_run(self, text):
+        called['text'] = text
+        return 'checked:' + text
+
+    orch = Orchestrator()
+    monkeypatch.setattr(orch, 'consistency_checker', type('CC', (), {'run': fake_run})())
+    result = orch.run('check: passage')
+    assert called['text'] == 'passage'
+    assert result == 'checked:passage'
+
+
+def test_consistency_intent(monkeypatch):
+    called = {}
+
+    def fake_run(self, text):
+        called['text'] = text
+        return 'checked:' + text
+
+    orch = Orchestrator()
+    monkeypatch.setattr(orch, 'consistency_checker', type('CC', (), {'run': fake_run})())
+    result = orch.run('consistency: story')
+    assert called['text'] == 'story'
+    assert result == 'checked:story'
+
+
+def test_creative_intent(monkeypatch):
+    called = {}
+
+    def fake_run(self, text):
+        called['text'] = text
+        return 'idea:' + text
+
+    orch = Orchestrator()
+    monkeypatch.setattr(orch, 'creativity_assistant', type('CA', (), {'run': fake_run})())
+    result = orch.run('creative: spark')
+    assert called['text'] == 'spark'
+    assert result == 'idea:spark'
+
+
+def test_brainstorm_intent(monkeypatch):
+    called = {}
+
+    def fake_run(self, text):
+        called['text'] = text
+        return 'idea:' + text
+
+    orch = Orchestrator()
+    monkeypatch.setattr(orch, 'creativity_assistant', type('CA', (), {'run': fake_run})())
+    result = orch.run('brainstorm: spark')
+    assert called['text'] == 'spark'
+    assert result == 'idea:spark'
+
+
+def test_search_intent(monkeypatch):
+    called = {}
+
+    def fake_run(self, text):
+        called['text'] = text
+        return 'found:' + text
+
+    orch = Orchestrator()
+    monkeypatch.setattr(orch, 'rag_search_agent', type('RS', (), {'run': fake_run})())
+    result = orch.run('search: query')
+    assert called['text'] == 'query'
+    assert result == 'found:query'
