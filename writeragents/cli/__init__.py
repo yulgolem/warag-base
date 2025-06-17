@@ -81,7 +81,11 @@ def main(
     long_term = DatabaseMemory(
         url=storage_cfg.get("database_url", "sqlite:///memory.db")
     )
-    short_term = RedisMemory(host=storage_cfg.get("redis_host", "localhost"))
+    short_term = RedisMemory(
+        host=storage_cfg.get("redis_host", "localhost"),
+        port=int(storage_cfg.get("redis_port", 6379)),
+        db=int(storage_cfg.get("redis_db", 0)),
+    )
     candidate_limit = int(wba_cfg.get("candidate_limit", 3))
     classification_threshold = float(wba_cfg.get("classification_threshold", 0.8))
     story_cfg = config.get("story_structure", {})
