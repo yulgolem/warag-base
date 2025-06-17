@@ -1,7 +1,7 @@
 # Configuration for local mode
 llm:
-  endpoint: http://localhost:8000
-  model: local-model
+  endpoint: http://ollama:11434
+  model: qwen2.5:7b-instruct-q4_k_m
 storage:
   database_url: sqlite:///memory.db
   redis_host: localhost
