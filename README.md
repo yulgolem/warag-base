@@ -67,10 +67,11 @@ The project currently relies on the **FRIDA** model for generating text embeddin
    This opens a minimal chat page at `http://localhost:5000`.
 3. Iterate on agent interactions and expand storage options.
 4. Add an [orchestrator](docs/orchestrator.md) to direct all agents.
-5. Expand the WBA with [self-organizing classification](docs/wba_classification.md).
-6. Incorporate a robust [consistency checker](docs/consistency_checker.md).
-7. Build a [story-structure analysis](docs/story_structure.md) module.
-8. See [docs/roadmap.md](docs/roadmap.md) for the full development roadmap, including plans for model integration, dynamic plot structures, and configuration improvements.
+5. Review the planned [agent_flow](docs/agent_flow.md) for orchestrating multiple agents.
+6. Expand the WBA with [self-organizing classification](docs/wba_classification.md).
+7. Incorporate a robust [consistency checker](docs/consistency_checker.md).
+8. Build a [story-structure analysis](docs/story_structure.md) module.
+9. See [docs/roadmap.md](docs/roadmap.md) for the full development roadmap, including plans for model integration, dynamic plot structures, and configuration improvements.
 
 Additional documentation is available in the [docs/](docs/) directory.
 

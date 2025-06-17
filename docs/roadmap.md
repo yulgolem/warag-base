@@ -8,7 +8,7 @@ This roadmap outlines upcoming milestones for WriterAgents as it evolves from a 
 - Replace the placeholder responses in `WriterAgent` and other modules with actual model-generated text.
 
 ## 1.1 Agent flow decisions
-- Choose from different agent flow strategies such as pipelineg agents, sliding context window, Memory-Enhanced Agents, Coordinator + Workers, Self-Critique Loop and others based on hardware limitations (Lenovo P1 Gen2 32 GB Ram Nvidia Quaddro 1000)
+The agent interactions combine several patterns: pipeline processing, a self-critique loop and a sliding context window. They are coordinated by the orchestrator and respect the limitations of a Lenovo P1 Gen2 laptop with 32 GB RAM and a Quadro 1000 GPU. See [agent_flow.md](agent_flow.md) for the detailed flow description.
 
 ## 2. Agent Logic
 - Finish the implementations of `CreativityAssistant`, `RAGSearchAgent`, and `WorldBuildingArchivist.run`.
