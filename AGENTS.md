@@ -4,7 +4,7 @@
 You are implementing a CrewAI multi-agent system for extracting entities and relationships from markdown files, then storing them in Neo4j graph database and PostgreSQL vector database.
 
 ## TECH STACK
-- **Framework**: CrewAI 0.28.8, LangChain 0.1.5
+- **Framework**: CrewAI 0.28.8
 - **Models**: Ollama (NuExtract, Saiga), FRIDA embeddings
 - **Databases**: Neo4j Community 5.x, PostgreSQL 15 + pgvector
 - **Languages**: Python 3.11, strictly typed with Pydantic models
@@ -23,6 +23,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 import json
 import requests
+import tiktoken
 
 class Entity(BaseModel):
     name: str
@@ -37,6 +38,7 @@ class EntityExtractorAgent:
     def __init__(self, ollama_base_url: str = "http://ollama:11434"):
         self.ollama_url = ollama_base_url
         self.model_name = "nuextract"
+        self.tokenizer = tiktoken.get_encoding("cl100k_base")
         
     def create_agent(self) -> Agent:
         return Agent(
@@ -49,11 +51,22 @@ class EntityExtractorAgent:
     
     def extract_entities(self, chunk_text: str, chunk_metadata: dict, entity_types: List[str]) -> List[Entity]:
         """Extract entities from text chunk using NuExtract model"""
-        # IMPLEMENT: Call Ollama API with NuExtract model
+        # IMPLEMENT: Call Ollama API with direct HTTP requests
         # IMPLEMENT: Parse JSON response 
         # IMPLEMENT: Validate entities against confidence threshold (0.7)
         # IMPLEMENT: Error handling with 3 retries
         pass
+    
+    def _call_ollama(self, prompt: str) -> dict:
+        """Direct HTTP call to Ollama API"""
+        payload = {
+            "model": self.model_name,
+            "prompt": prompt,
+            "stream": False,
+            "format": "json"
+        }
+        response = requests.post(f"{self.ollama_url}/api/generate", json=payload)
+        return response.json()
 ```
 
 **PROMPT TEMPLATE** (use exactly this format):
@@ -353,6 +366,60 @@ class AgentConfig(BaseModel):
     similarity_threshold: float = 0.85
     max_retries: int = 3
     batch_size: int = 10
+    chunk_size: int = 500
+    chunk_overlap: int = 100
+```
+
+### Chunking Implementation (without LangChain)
+```python
+# src/utils/chunking.py
+import tiktoken
+from typing import List, Dict
+
+def recursive_chunk_text(
+    text: str,
+    chunk_size: int = 500,
+    chunk_overlap: int = 100,
+    separators: List[str] = ["\n\n", "\n", ".", " "]
+) -> List[Dict]:
+    """
+    Recursive text chunking implementation (replaces LangChain)
+    """
+    tokenizer = tiktoken.get_encoding("cl100k_base")
+    chunks = []
+    
+    def _split_text(text: str, separators: List[str]) -> List[str]:
+        # IMPLEMENT: Recursive splitting logic
+        # IMPLEMENT: Token counting
+        # IMPLEMENT: Overlap handling
+        pass
+    
+    return chunks
+```
+
+### Direct Ollama API Calls
+```python
+# src/utils/ollama_client.py
+import requests
+import json
+from typing import Dict, Any
+
+class OllamaClient:
+    def __init__(self, base_url: str = "http://ollama:11434"):
+        self.base_url = base_url
+    
+    def generate(self, model: str, prompt: str, format: str = "json") -> Dict[Any, Any]:
+        """Direct HTTP call to Ollama API (replaces LangChain wrapper)"""
+        payload = {
+            "model": model,
+            "prompt": prompt,
+            "stream": False,
+            "format": format
+        }
+        
+        response = requests.post(f"{self.base_url}/api/generate", json=payload)
+        response.raise_for_status()
+        return response.json()
 ```
 
 ## VALIDATION COMMANDS

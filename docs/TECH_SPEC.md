@@ -4,7 +4,7 @@
 Создание контейнеризованного ассистента для писателя с функциями извлечения сущностей из markdown-файлов, построения графа связей и семантического поиска.
 
 ## Tech Stack
-- **Backend**: Python 3.11, CrewAI, LangChain
+- **Backend**: Python 3.11, CrewAI
 - **Frontend**: Streamlit (доступен на localhost:8501)
 - **Databases**: PostgreSQL 15 + pgvector, Neo4j Community 5.x
 - **AI**: Ollama (NuExtract, Saiga), FRIDA embeddings
@@ -137,10 +137,27 @@ class Relationship(BaseModel):
 **File**: `src/utils/chunking.py`
 **Deliverable**: Система разбиения текста на чанки
 **Requirements**:
-- RecursiveCharacterTextSplitter из LangChain
+- Собственная реализация recursive chunking
 - chunk_size=500, chunk_overlap=100 (настраиваемо)
 - Поддержка markdown разделителей: ["\n\n", "\n", ".", " "]
 - Метаданные для каждого чанка (file_name, chunk_id, tokens_count)
+- Подсчет токенов через tiktoken
+
+**Implementation**:
+```python
+import tiktoken
+from typing import List, Dict
+
+def recursive_chunk_text(
+    text: str, 
+    chunk_size: int = 500,
+    chunk_overlap: int = 100,
+    separators: List[str] = ["\n\n", "\n", ".", " "]
+) -> List[Dict]:
+    """Recursive text chunking implementation"""
+    # Собственная реализация без LangChain
+    pass
+```
 
 **Test**: `tests/test_utils/test_chunking.py`
 ```python
@@ -148,6 +165,7 @@ def test_chunk_markdown():
     # Test chunk size limits
     # Test overlap preservation  
     # Test metadata generation
+    # Test token counting
     pass
 ```
 
@@ -181,12 +199,13 @@ def test_chunk_markdown():
 ```
 crewai==0.28.8
 streamlit==1.29.0
-langchain==0.1.5
 neo4j==5.15.0
 psycopg2-binary==2.9.9
 pgvector==0.2.4
 pydantic==2.5.0
 ollama==0.1.7
+requests==2.31.0
+tiktoken==0.5.1
 pytest==7.4.3
 ```
 
@@ -199,7 +218,7 @@ pytest==7.4.3
 **Deliverable**: CrewAI агент для извлечения сущностей
 **Requirements**:
 - Использует NuExtract через Ollama
-- Динамически настраиваемые на основании потребляемого текста типы сущностей: ["person", "location", "organization", "concept", "object"]. Нефиксированные в коде.
+- Настраиваемые типы сущностей: ["person", "location", "organization", "concept", "object"]
 - JSON output format
 - Error handling для LLM failures
 - Batch processing для множественных чанков
@@ -227,7 +246,7 @@ class EntityExtractorAgent:
 **Requirements**:
 - Использует Saiga через Ollama
 - Входные данные: список сущностей + оригинальный текст
-- Определяет связи типа: "knows", "located_in", "part_of", "owns", "related_to". Связи динамические на основании сущностей и текста, в коде не фиксированны.
+- Определяет связи типа: "knows", "located_in", "part_of", "owns", "related_to"
 - Confidence score для каждой связи
 
 **Test**: `tests/test_agents/test_relationship_analyzer.py`
