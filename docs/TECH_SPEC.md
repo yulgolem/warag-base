@@ -218,7 +218,7 @@ pytest==7.4.3
 **Deliverable**: CrewAI агент для извлечения сущностей
 **Requirements**:
 - Использует NuExtract через Ollama
-- Настраиваемые типы сущностей: ["person", "location", "organization", "concept", "object"]
+- Динамически настраиваемые на основе обрабатываемого текста типы сущностей: ["person", "location", "organization", "concept", "object"]. Не фиксируются в коде. 
 - JSON output format
 - Error handling для LLM failures
 - Batch processing для множественных чанков
@@ -246,7 +246,7 @@ class EntityExtractorAgent:
 **Requirements**:
 - Использует Saiga через Ollama
 - Входные данные: список сущностей + оригинальный текст
-- Определяет связи типа: "knows", "located_in", "part_of", "owns", "related_to"
+- Определяет связи типа: "knows", "located_in", "part_of", "owns", "related_to" - это тоже динамические типы связей на основе обрабатываемых сущностей, не фиксируемые в коде.
 - Confidence score для каждой связи
 
 **Test**: `tests/test_agents/test_relationship_analyzer.py`
