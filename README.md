@@ -8,7 +8,8 @@ processes markdown files and stores extracted knowledge in databases.
 1. Install dependencies:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
 2. Copy the example environment file and adjust values as needed:
