@@ -30,6 +30,15 @@ To start the Web UI from your host, publish port ``5000`` and run::
 
 Again, replace ``run`` with ``exec`` if the container is already running.
 Then open `http://localhost:5000` in your browser to access the chat interface.
+The page provides **Load samples** and **Clear store** buttons. Clicking
+``Load samples`` sends a request to ``/load-samples`` which imports the
+verification markdown files from the directory specified by the ``WBA_DOCS``
+environment variable (default ``/app/docs/wba_samples``). The server responds
+with ``{"message": "Loaded"}`` and the text appears in the chat log.
+
+``Clear store`` issues ``/clear-store`` to wipe the archive. A response of
+``{"message": "Cleared"}`` confirms success.
+
 View the chat logs with ``docker compose logs -f app``.
 Additional container setup details are documented in
 [docs/docker_setup.md](docs/docker_setup.md).
