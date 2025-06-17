@@ -1,5 +1,7 @@
 from pathlib import Path
 import logging
+from collections import Counter
+import re
 from writeragents.storage import RAGEmbeddingStore, FileRAGStore
 from .faceted import FacetManager
 
@@ -23,6 +25,174 @@ class WorldBuildingArchivist:
         self.candidate_limit = candidate_limit
         self.classification_threshold = classification_threshold
 
+    _STOPWORDS = {
+        "и",
+        "в",
+        "во",
+        "не",
+        "что",
+        "он",
+        "на",
+        "я",
+        "с",
+        "со",
+        "как",
+        "а",
+        "то",
+        "все",
+        "она",
+        "так",
+        "его",
+        "но",
+        "да",
+        "ты",
+        "к",
+        "у",
+        "же",
+        "вы",
+        "за",
+        "бы",
+        "по",
+        "только",
+        "ее",
+        "мне",
+        "было",
+        "вот",
+        "от",
+        "меня",
+        "еще",
+        "нет",
+        "о",
+        "из",
+        "ему",
+        "теперь",
+        "когда",
+        "даже",
+        "ну",
+        "вдруг",
+        "ли",
+        "если",
+        "уже",
+        "или",
+        "ни",
+        "быть",
+        "был",
+        "него",
+        "до",
+        "вас",
+        "нибудь",
+        "опять",
+        "уж",
+        "вам",
+        "ведь",
+        "там",
+        "потом",
+        "себя",
+        "ничего",
+        "ей",
+        "может",
+        "они",
+        "тут",
+        "где",
+        "есть",
+        "надо",
+        "ней",
+        "для",
+        "мы",
+        "тебя",
+        "их",
+        "чем",
+        "была",
+        "сам",
+        "чтоб",
+        "без",
+        "будто",
+        "чего",
+        "раз",
+        "тоже",
+        "себе",
+        "под",
+        "будет",
+        "ж",
+        "тогда",
+        "кто",
+        "этот",
+        "того",
+        "потому",
+        "этого",
+        "какой",
+        "совсем",
+        "ним",
+        "здесь",
+        "этом",
+        "один",
+        "почти",
+        "мой",
+        "тем",
+        "чтобы",
+        "нее",
+        "сейчас",
+        "были",
+        "куда",
+        "зачем",
+        "всех",
+        "никогда",
+        "можно",
+        "при",
+        "наконец",
+        "два",
+        "об",
+        "другой",
+        "хоть",
+        "после",
+        "над",
+        "больше",
+        "тот",
+        "через",
+        "эти",
+        "нас",
+        "про",
+        "них",
+        "какая",
+        "много",
+        "разве",
+        "три",
+        "эту",
+        "моя",
+        "впрочем",
+        "хорошо",
+        "свою",
+        "этой",
+        "перед",
+        "иногда",
+        "лучше",
+        "чуть",
+        "том",
+        "нельзя",
+        "такой",
+        "им",
+        "более",
+        "всегда",
+        "конечно",
+        "всю",
+        "между",
+    }
+
+    def _semantic_type(self, text: str) -> str:
+        words = re.findall(r"[A-Za-zА-Яа-я]+", text.lower())
+        words = [w for w in words if w not in self._STOPWORDS and len(w) >= 3]
+        if not words:
+            return ""
+        freq = Counter(words)
+        return freq.most_common(1)[0][0].capitalize()
+
+    def _extract_facets(self, text: str) -> dict[str, str]:
+        facets: dict[str, str] = {}
+        typ = self._semantic_type(text)
+        if typ:
+            facets["type"] = typ
+        return facets
+
     def archive_text(self, text: str, **facets):
         """Store ``text`` in the RAG embedding store with optional facets."""
         metadata = {}
@@ -45,14 +215,12 @@ class WorldBuildingArchivist:
             if log is not None:
                 log.append(msg)
             text = md.read_text(encoding="utf-8")
-            facets: dict[str, str] = {}
-            for line in text.splitlines()[:5]:
-                lower = line.lower()
-                if lower.startswith("type:"):
-                    facets["type"] = line.split(":", 1)[1].strip()
-                elif lower.startswith("era:"):
-                    facets["era"] = line.split(":", 1)[1].strip()
-            self.archive_text(text, **facets)
+            for block in text.split("\n\n"):
+                part = block.strip()
+                if not part:
+                    continue
+                facets = self._extract_facets(part)
+                self.archive_text(part, **facets)
         if log is not None:
             log.extend(self.facets.get_classification_logs()[start:])
 
@@ -94,14 +262,10 @@ class WorldBuildingArchivist:
 
     def run(self, context: str) -> str:
         """Archive ``context`` while extracting basic facet information."""
-
-        facets: dict[str, str] = {}
-        for line in context.splitlines()[:5]:
-            lower = line.lower()
-            if lower.startswith("type:"):
-                facets["type"] = line.split(":", 1)[1].strip()
-            elif lower.startswith("era:"):
-                facets["era"] = line.split(":", 1)[1].strip()
-
-        self.archive_text(context, **facets)
+        for block in context.split("\n\n"):
+            part = block.strip()
+            if not part:
+                continue
+            facets = self._extract_facets(part)
+            self.archive_text(part, **facets)
         return "Archived"
