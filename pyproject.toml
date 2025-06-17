@@ -10,6 +10,7 @@ dependencies = [
     "redis",
     "psycopg2-binary",
     "flask",
+    "requests",
 ]
 
 [project.optional-dependencies]
