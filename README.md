@@ -59,21 +59,17 @@ The project currently relies on the **FRIDA** model for generating text embeddin
 
 ## Roadmap
 
-1. Finalize CLI utilities and configuration management.
-2. Introduce a simple Web UI that mirrors CLI features. Launch it with::
+The complete development plan lives in [docs/roadmap.md](docs/roadmap.md).
+Current progress is tracked in [docs/progress.md](docs/progress.md).
 
-       python -m writeragents.web.app
+Launch the minimal Web UI with::
 
-   This opens a minimal chat page at `http://localhost:5000`.
-3. Iterate on agent interactions and expand storage options.
-4. Add an [orchestrator](docs/orchestrator.md) to direct all agents.
-5. Review the planned [agent_flow](docs/agent_flow.md) for orchestrating multiple agents.
-6. Expand the WBA with [self-organizing classification](docs/wba_classification.md).
-7. Incorporate a robust [consistency checker](docs/consistency_checker.md).
-8. Build a [story-structure analysis](docs/story_structure.md) module.
-9. See [docs/roadmap.md](docs/roadmap.md) for the full development roadmap, including plans for model integration, dynamic plot structures, and configuration improvements.
+    python -m writeragents.web.app
 
-Additional documentation is available in the [docs/](docs/) directory.
+This opens a chat page at `http://localhost:5000`.
+
+Additional documentation is available in the [docs/](docs/) directory,
+including the current [progress report](docs/progress.md).
 
 ## Makefile Commands
 

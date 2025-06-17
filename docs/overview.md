@@ -24,3 +24,5 @@ WriterAgents uses the **FRIDA** model to create Russian embeddings for archived 
 
 For an explanation of how the system classifies archived text into content types, see [wba_classification.md](wba_classification.md).
 
+Current progress is tracked in [progress.md](progress.md).
+
