@@ -104,8 +104,13 @@ docker compose run --rm -p 5000:5000 app python -m writeragents.web.app
 If the services are already up, use `docker compose exec app` in place of
 `run`.
 
-Open `http://localhost:5000` in your browser to access the chat UI. Logs of
-each message appear in the container output, which you can view with:
+Open `http://localhost:5000` in your browser to access the chat UI. The page
+includes **Load samples** and **Clear store** buttons. These call the
+``/load-samples`` and ``/clear-store`` endpoints. ``Load samples`` imports the
+verification documents from ``WBA_DOCS`` (default ``/app/docs/wba_samples``)
+and responds with ``{"message": "Loaded"}``. ``Clear store`` wipes the archive
+and returns ``{"message": "Cleared"}``. Logs of each action appear in the
+container output, which you can view with:
 
 ```bash
 docker compose logs -f app
