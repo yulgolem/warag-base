@@ -26,7 +26,11 @@ class DatabaseMemory:
     def _ensure_table(self) -> None:
         cur = self.conn.cursor()
         cur.execute(
-            "CREATE TABLE IF NOT EXISTS memory (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT)"
+            (
+                "CREATE TABLE IF NOT EXISTS memory ("
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                "data TEXT)"
+            )
         )
         self.conn.commit()
 
