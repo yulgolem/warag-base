@@ -7,3 +7,5 @@ storage:
   redis_host: localhost
 wba:
   candidate_limit: 3
+story_structure:
+  template: [act_i, act_ii, act_iii]

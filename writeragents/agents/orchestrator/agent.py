@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Sequence
+
 from writeragents.agents.wba.agent import WorldBuildingArchivist
 from writeragents.agents.consistency_checker.agent import ConsistencyChecker
 from writeragents.agents.creativity_assistant.agent import CreativityAssistant
@@ -11,13 +13,18 @@ from writeragents.agents.story_structure_analyst.agent import StoryStructureAnal
 class Orchestrator:
     """Route user requests to the appropriate specialized agent."""
 
-    def __init__(self, *, candidate_limit: int = 3) -> None:
+    def __init__(
+        self,
+        *,
+        candidate_limit: int = 3,
+        structure_template: Sequence[str] | None = None,
+    ) -> None:
         self.wba = WorldBuildingArchivist(candidate_limit=candidate_limit)
         self.consistency_checker = ConsistencyChecker()
         self.creativity_assistant = CreativityAssistant()
         self.rag_search_agent = RAGSearchAgent()
         self.writer_agent = WriterAgent()
-        self.structure_analyst = StoryStructureAnalyst()
+        self.structure_analyst = StoryStructureAnalyst(template=structure_template)
 
     # ------------------------------------------------------------------
     def _parse_intent(self, request: str) -> tuple[str | None, str]:

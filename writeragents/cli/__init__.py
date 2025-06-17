@@ -83,6 +83,8 @@ def main(
     )
     short_term = RedisMemory(host=storage_cfg.get("redis_host", "localhost"))
     candidate_limit = int(wba_cfg.get("candidate_limit", 3))
+    story_cfg = config.get("story_structure", {})
+    structure_template = story_cfg.get("template")
 
     if args.command == "archive":
         from writeragents.agents.wba.agent import WorldBuildingArchivist
@@ -157,7 +159,10 @@ def main(
     elif args.command == "write":
         from writeragents.agents.orchestrator.agent import Orchestrator
 
-        agent = Orchestrator(candidate_limit=candidate_limit)
+        agent = Orchestrator(
+            candidate_limit=candidate_limit,
+            structure_template=structure_template,
+        )
         agent.run(args.prompt)
 
     print(f"Using configuration: {args.config}")

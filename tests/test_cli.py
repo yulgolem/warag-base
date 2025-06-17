@@ -90,6 +90,20 @@ def test_candidate_limit_from_config(tmp_path, monkeypatch):
     assert called["limit"] == 5
 
 
+def test_structure_template_from_config(tmp_path, monkeypatch):
+    cfg = tmp_path / "t.yaml"
+    cfg.write_text("story_structure:\n  template: [start, mid, end]\n")
+    captured = {}
+
+    def fake_init(self, *, candidate_limit=3, structure_template=None):
+        captured["template"] = structure_template
+
+    monkeypatch.setattr(Orchestrator, "__init__", fake_init)
+    monkeypatch.setattr(Orchestrator, "run", lambda self, p: None)
+    main(["--config", str(cfg), "write", "x"])
+    assert captured["template"] == ["start", "mid", "end"]
+
+
 def _run_menu(monkeypatch, inputs):
     it = iter(inputs)
     monkeypatch.setattr("builtins.input", lambda _: next(it))

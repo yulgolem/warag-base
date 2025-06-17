@@ -1,11 +1,27 @@
 from __future__ import annotations
 
 import re
-from typing import Dict, List
+from typing import Dict, List, Optional, Sequence
 
 
 class StoryStructureAnalyst:
     """Analyze structural aspects of a text."""
+
+    def __init__(self, template: Optional[Sequence[str]] = None) -> None:
+        """Create analyst with optional story ``template``.
+
+        Parameters
+        ----------
+        template:
+            Ordered list of section names defining the narrative structure.
+            Text is divided evenly among these sections. Defaults to a
+            three-act scheme.
+        """
+        self.template = list(template) if template else [
+            "act_i",
+            "act_ii",
+            "act_iii",
+        ]
 
     # ------------------------------------------------------------------
     def analyze_pacing(self, text: str) -> str:
@@ -21,17 +37,19 @@ class StoryStructureAnalyst:
         return "moderate"
 
     # ------------------------------------------------------------------
-    def analyze_three_act_structure(self, text: str) -> Dict[str, str]:
-        """Split ``text`` into approximate three acts and return them."""
+    def analyze_structure(self, text: str) -> Dict[str, str]:
+        """Return segments of ``text`` according to ``self.template``."""
         words = text.split()
         if not words:
-            return {"act_i": "", "act_ii": "", "act_iii": ""}
-        third = max(1, len(words) // 3)
-        return {
-            "act_i": " ".join(words[:third]),
-            "act_ii": " ".join(words[third:2 * third]),
-            "act_iii": " ".join(words[2 * third :]),
-        }
+            return {name: "" for name in self.template}
+
+        seg_size = max(1, len(words) // len(self.template))
+        acts: Dict[str, str] = {}
+        for i, name in enumerate(self.template):
+            start = i * seg_size
+            end = len(words) if i == len(self.template) - 1 else (i + 1) * seg_size
+            acts[name] = " ".join(words[start:end])
+        return acts
 
     # ------------------------------------------------------------------
     def find_unresolved_subplots(self, text: str) -> List[str]:
@@ -48,16 +66,15 @@ class StoryStructureAnalyst:
     def run(self, text: str) -> str:
         """Return a human readable structure report for ``text``."""
         pacing = self.analyze_pacing(text)
-        acts = self.analyze_three_act_structure(text)
+        acts = self.analyze_structure(text)
         subplots = self.find_unresolved_subplots(text)
 
         report_lines = [
             f"Pacing: {pacing}",
-            "Three-act breakdown:",
-            f"  Act I words: {len(acts['act_i'].split())}",
-            f"  Act II words: {len(acts['act_ii'].split())}",
-            f"  Act III words: {len(acts['act_iii'].split())}",
+            "Structure breakdown:",
         ]
+        for name in self.template:
+            report_lines.append(f"  {name} words: {len(acts[name].split())}")
         if subplots:
             report_lines.append("Unresolved subplots: " + ", ".join(subplots))
         else:
