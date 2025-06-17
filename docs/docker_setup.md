@@ -95,14 +95,11 @@ default `/app/docs/wba_samples`). Option `5` wipes the RAG store.
 
 ## Running the Web UI
 
-To experiment with the simple chat interface, publish port `5000` and run:
+Start all services, including the chat interface, with:
 
 ```bash
-docker compose run --rm -p 5000:5000 app python -m writeragents.web.app
+docker compose up -d
 ```
-
-If the services are already up, use `docker compose exec app` in place of
-`run`.
 
 Open `http://localhost:5000` in your browser to access the chat UI. The page
 includes **Load samples** and **Clear store** buttons. These call the

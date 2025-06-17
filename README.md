@@ -24,11 +24,10 @@ When using Docker Compose you can run menu commands from the host with::
 
 If the services are already running, use ``docker compose exec app`` instead of ``run``.
 
-To start the Web UI from your host, publish port ``5000`` and run::
+To launch the Web UI simply run::
 
-    docker compose run --rm -p 5000:5000 app python -m writeragents.web.app
+    docker compose up -d
 
-Again, replace ``run`` with ``exec`` if the container is already running.
 Then open `http://localhost:5000` in your browser to access the chat interface.
 The page provides **Load samples** and **Clear store** buttons. Clicking
 ``Load samples`` sends a request to ``/load-samples`` which imports the
@@ -76,11 +75,12 @@ The project currently relies on the **FRIDA** model for generating text embeddin
 The complete development plan lives in [docs/roadmap.md](docs/roadmap.md).
 Current progress is tracked in [docs/progress.md](docs/progress.md).
 
-Launch the minimal Web UI with::
+Launch the minimal Web UI locally with::
 
     python -m writeragents.web.app
 
-This opens a chat page at `http://localhost:5000`.
+Or run ``docker compose up -d`` to start it in a container. Both open a chat
+page at `http://localhost:5000`.
 
 Additional documentation is available in the [docs/](docs/) directory,
 including the current [progress report](docs/progress.md).
