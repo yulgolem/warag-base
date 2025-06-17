@@ -67,7 +67,12 @@ def test_config_option_parsing(tmp_path, monkeypatch):
 def test_candidate_limit_default(monkeypatch):
     called = {}
 
-    def fake_init(self, store=None, candidate_limit=3):
+    def fake_init(
+        self,
+        store=None,
+        candidate_limit=3,
+        classification_threshold=0.8,
+    ):
         called["limit"] = candidate_limit
 
     monkeypatch.setattr(WorldBuildingArchivist, "__init__", fake_init)
@@ -81,7 +86,7 @@ def test_candidate_limit_from_config(tmp_path, monkeypatch):
     cfg.write_text("wba:\n  candidate_limit: 5\n")
     called = {}
 
-    def fake_init(self, store=None, candidate_limit=3):
+    def fake_init(self, store=None, candidate_limit=3, classification_threshold=0.8):
         called["limit"] = candidate_limit
 
     monkeypatch.setattr(WorldBuildingArchivist, "__init__", fake_init)
@@ -90,12 +95,54 @@ def test_candidate_limit_from_config(tmp_path, monkeypatch):
     assert called["limit"] == 5
 
 
+def test_threshold_default(monkeypatch):
+    captured = {}
+
+    def fake_init(
+        self,
+        store=None,
+        candidate_limit=3,
+        classification_threshold=0.8,
+    ):
+        captured["thresh"] = classification_threshold
+
+    monkeypatch.setattr(WorldBuildingArchivist, "__init__", fake_init)
+    monkeypatch.setattr(WorldBuildingArchivist, "archive_text", lambda self, t: None)
+    main(["archive", "text"])
+    assert captured["thresh"] == 0.8
+
+
+def test_threshold_from_config(tmp_path, monkeypatch):
+    cfg = tmp_path / "th.yaml"
+    cfg.write_text("wba:\n  classification_threshold: 0.9\n")
+    captured = {}
+
+    def fake_init(
+        self,
+        store=None,
+        candidate_limit=3,
+        classification_threshold=0.8,
+    ):
+        captured["thresh"] = classification_threshold
+
+    monkeypatch.setattr(WorldBuildingArchivist, "__init__", fake_init)
+    monkeypatch.setattr(WorldBuildingArchivist, "archive_text", lambda self, t: None)
+    main(["--config", str(cfg), "archive", "text"])
+    assert captured["thresh"] == 0.9
+
+
 def test_structure_template_from_config(tmp_path, monkeypatch):
     cfg = tmp_path / "t.yaml"
     cfg.write_text("story_structure:\n  template: [start, mid, end]\n")
     captured = {}
 
-    def fake_init(self, *, candidate_limit=3, structure_template=None):
+    def fake_init(
+        self,
+        *,
+        candidate_limit=3,
+        classification_threshold=0.8,
+        structure_template=None,
+    ):
         captured["template"] = structure_template
 
     monkeypatch.setattr(Orchestrator, "__init__", fake_init)

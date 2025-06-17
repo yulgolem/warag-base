@@ -8,5 +8,6 @@ storage:
   redis_host: redis
 wba:
   candidate_limit: 3
+  classification_threshold: 0.8
 story_structure:
   template: [act_i, act_ii, act_iii]

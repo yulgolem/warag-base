@@ -7,11 +7,20 @@ class WorldBuildingArchivist:
     """Collects and maintains details about the fictional world."""
 
     def __init__(
-        self, store: RAGEmbeddingStore | None = None, *, candidate_limit: int = 3
+        self,
+        store: RAGEmbeddingStore | None = None,
+        *,
+        candidate_limit: int = 3,
+        classification_threshold: float = 0.8,
     ) -> None:
         self.store = store or FileRAGStore()
-        self.facets = FacetManager(store=self.store, candidate_limit=candidate_limit)
+        self.facets = FacetManager(
+            store=self.store,
+            threshold=classification_threshold,
+            candidate_limit=candidate_limit,
+        )
         self.candidate_limit = candidate_limit
+        self.classification_threshold = classification_threshold
 
     def archive_text(self, text: str, **facets):
         """Store ``text`` in the RAG embedding store with optional facets."""

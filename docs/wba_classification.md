@@ -19,3 +19,15 @@ Beyond simple content types the archivist can track arbitrary **facets** such as
 instance within ``FacetManager``. When a facet value is seen often enough it is
 saved as a meta-document with ``{"category": "facet-<name>"}``. Future archives
 then store the normalized value in the chunk metadata.
+
+## Configuration
+
+The similarity threshold and candidate limit are defined in ``config/*.yaml``:
+
+```yaml
+wba:
+  candidate_limit: 3
+  classification_threshold: 0.8
+```
+
+Adjust these values to tune how aggressively new types are created.

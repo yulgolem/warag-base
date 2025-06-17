@@ -17,9 +17,13 @@ class Orchestrator:
         self,
         *,
         candidate_limit: int = 3,
+        classification_threshold: float = 0.8,
         structure_template: Sequence[str] | None = None,
     ) -> None:
-        self.wba = WorldBuildingArchivist(candidate_limit=candidate_limit)
+        self.wba = WorldBuildingArchivist(
+            candidate_limit=candidate_limit,
+            classification_threshold=classification_threshold,
+        )
         self.consistency_checker = ConsistencyChecker()
         self.creativity_assistant = CreativityAssistant()
         self.rag_search_agent = RAGSearchAgent()
