@@ -1,0 +1,5 @@
+# Logs should not be included in Docker image
+logs/
+*.log
+*.jsonl
+
