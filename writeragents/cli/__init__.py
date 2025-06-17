@@ -83,23 +83,33 @@ def main(
     )
     short_term = RedisMemory(host=storage_cfg.get("redis_host", "localhost"))
     candidate_limit = int(wba_cfg.get("candidate_limit", 3))
+    classification_threshold = float(wba_cfg.get("classification_threshold", 0.8))
     story_cfg = config.get("story_structure", {})
     structure_template = story_cfg.get("template")
 
     if args.command == "archive":
         from writeragents.agents.wba.agent import WorldBuildingArchivist
 
-        agent = WorldBuildingArchivist(candidate_limit=candidate_limit)
+        agent = WorldBuildingArchivist(
+            candidate_limit=candidate_limit,
+            classification_threshold=classification_threshold,
+        )
         agent.archive_text(args.text)
     elif args.command == "load":
         from writeragents.agents.wba.agent import WorldBuildingArchivist
 
-        agent = WorldBuildingArchivist(candidate_limit=candidate_limit)
+        agent = WorldBuildingArchivist(
+            candidate_limit=candidate_limit,
+            classification_threshold=classification_threshold,
+        )
         agent.load_markdown_directory(args.directory)
     elif args.command == "search":
         from writeragents.agents.wba.agent import WorldBuildingArchivist
 
-        agent = WorldBuildingArchivist(candidate_limit=candidate_limit)
+        agent = WorldBuildingArchivist(
+            candidate_limit=candidate_limit,
+            classification_threshold=classification_threshold,
+        )
         if args.mode == "keyword":
             results = agent.search_keyword(args.query)
         else:
@@ -110,7 +120,10 @@ def main(
     elif args.command == "wba-menu":
         from writeragents.agents.wba.agent import WorldBuildingArchivist
 
-        agent = WorldBuildingArchivist(candidate_limit=candidate_limit)
+        agent = WorldBuildingArchivist(
+            candidate_limit=candidate_limit,
+            classification_threshold=classification_threshold,
+        )
         while True:
             choice = input(
                 "1) Load Markdown directory\n"
@@ -161,6 +174,7 @@ def main(
 
         agent = Orchestrator(
             candidate_limit=candidate_limit,
+            classification_threshold=classification_threshold,
             structure_template=structure_template,
         )
         agent.run(args.prompt)
