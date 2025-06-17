@@ -5,7 +5,10 @@ import os
 from importlib import resources
 from typing import Any, Dict, Optional
 
+import logging
 import requests
+
+logger = logging.getLogger(__name__)
 
 from writeragents.cli import load_config
 
@@ -56,9 +59,13 @@ class LLMClient:
                 "messages": [{"role": "user", "content": prompt}],
             }
 
-        resp = requests.post(url, json=payload, headers=headers, timeout=10)
-        resp.raise_for_status()
-        data = resp.json()
+        try:
+            resp = requests.post(url, json=payload, headers=headers, timeout=10)
+            resp.raise_for_status()
+            data = resp.json()
+        except (requests.RequestException, ValueError) as exc:
+            logger.error("LLM request failed: %s", exc)
+            return ""
         if "choices" in data:
             choices = data.get("choices", [])
             if choices:
