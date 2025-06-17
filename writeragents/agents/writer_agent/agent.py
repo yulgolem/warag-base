@@ -1,11 +1,19 @@
+"""Writer agent that delegates text generation to an LLM service."""
+
+from __future__ import annotations
+
+from typing import Optional
+
+from writeragents.llm import LLMClient
+
+
 class WriterAgent:
     """Coordinates other agents and produces the final narrative."""
 
-    def run(self, prompt):
-        """Generate a text response for ``prompt``.
+    def __init__(self, llm_client: Optional[LLMClient] = None) -> None:
+        self.llm = llm_client or LLMClient()
 
-        This placeholder implementation simply echoes the prompt back. It
-        allows the CLI and Web UI to provide basic interaction while the
-        full agent workflow is still under development.
-        """
-        return f"Echo: {prompt}"
+    # ------------------------------------------------------------------
+    def run(self, prompt: str) -> str:
+        """Generate a text response for ``prompt`` using the LLM."""
+        return self.llm.generate(prompt)
