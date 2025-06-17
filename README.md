@@ -31,6 +31,8 @@ To start the Web UI from your host, publish port ``5000`` and run::
 Again, replace ``run`` with ``exec`` if the container is already running.
 Then open `http://localhost:5000` in your browser to access the chat interface.
 View the chat logs with ``docker compose logs -f app``.
+Additional container setup details are documented in
+[docs/docker_setup.md](docs/docker_setup.md).
 
 ## Status
 
@@ -40,6 +42,9 @@ the starting point for phase 2.
 Run the CLI as shown above. It loads `writeragents/config/local.yaml` by
 default. Use `--config` or the `WRITERAG_CONFIG` environment variable to select
 a different YAML configuration file, such as `writeragents/config/remote.yaml`.
+The configuration also lets you define custom story templates under the
+`story_structure` section. See [docs/story_structure.md](docs/story_structure.md)
+for details.
 
 ## Architecture
 
