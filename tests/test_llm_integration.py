@@ -4,6 +4,7 @@ from writeragents.agents.creativity_assistant.agent import CreativityAssistant
 from writeragents.agents.rag_search.agent import RAGSearchAgent
 from writeragents.agents.wba.agent import WorldBuildingArchivist
 from writeragents.storage import RAGEmbeddingStore
+import logging
 
 
 def test_llmclient_openai(monkeypatch):
@@ -55,3 +56,15 @@ def test_rag_search_agent(monkeypatch):
     monkeypatch.setattr(LLMClient, 'generate', lambda self, prompt: 'summary')
     agent = RAGSearchAgent(archivist=wba, llm_client=LLMClient(endpoint='x'))
     assert agent.run('Where do dragons live?') == 'summary'
+
+
+def test_llmclient_error(monkeypatch, caplog):
+    def fake_post(url, json, headers, timeout):
+        raise requests.RequestException('fail')
+
+    monkeypatch.setattr(requests, 'post', fake_post)
+    client = LLMClient(endpoint='http://example.com/v1', model='gpt', api_key='k')
+    with caplog.at_level(logging.ERROR):
+        result = client.generate('hi')
+    assert result == ''
+    assert any('fail' in m for m in caplog.messages)
