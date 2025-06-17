@@ -32,3 +32,11 @@ def test_overlap_preservation():
         prev_tokens = enc.encode(chunks[i - 1]["text"])
         curr_tokens = enc.encode(chunks[i]["text"])
         assert prev_tokens[-5:] == curr_tokens[:5]
+
+
+def test_overlap_spacing():
+    text = "One two three four five six seven eight nine ten."
+    chunks = recursive_chunk_text(text, chunk_size=10, chunk_overlap=3)
+    for i in range(1, len(chunks)):
+        last_word = chunks[i - 1]["text"].split()[-1]
+        assert chunks[i]["text"].startswith(last_word + " ")

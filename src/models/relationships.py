@@ -13,3 +13,4 @@ class Relationship(BaseModel):
     relation_type: str
     description: Optional[str] = None
     confidence: float
+    source_text: str
