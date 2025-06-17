@@ -42,8 +42,16 @@ class LLMClient:
         return cfg.get("llm", {})
 
     # ------------------------------------------------------------------
-    def generate(self, prompt: str) -> str:
-        """Return model output for ``prompt`` using the configured endpoint."""
+    def generate(self, prompt: str, *, log: list[str] | None = None) -> str:
+        """Return model output for ``prompt`` using the configured endpoint.
+
+        If ``log`` is provided, the prompt and final response are appended to
+        that list for inspection.
+        """
+
+        logger.info("LLM prompt: %s", prompt)
+        if log is not None:
+            log.append(f"prompt: {prompt}")
 
         headers = {"Content-Type": "application/json"}
         if self.api_key:
@@ -69,6 +77,12 @@ class LLMClient:
         if "choices" in data:
             choices = data.get("choices", [])
             if choices:
-                return choices[0].get("message", {}).get("content", "")
-            return ""
-        return data.get("response", "")
+                result = choices[0].get("message", {}).get("content", "")
+            else:
+                result = ""
+        else:
+            result = data.get("response", "")
+        logger.info("LLM response: %s", result)
+        if log is not None:
+            log.append(f"response: {result}")
+        return result

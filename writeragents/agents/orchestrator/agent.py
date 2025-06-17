@@ -44,8 +44,11 @@ class Orchestrator:
         return None, request
 
     # ------------------------------------------------------------------
-    def run(self, request: str):
-        """Process ``request`` and return a response string."""
+    def run(self, request: str, *, log: list[str] | None = None):
+        """Process ``request`` and return a response string.
+
+        Logs from any model interactions are appended to ``log`` when provided.
+        """
         intent, content = self._parse_intent(request)
 
         if intent == "archive":
@@ -55,13 +58,13 @@ class Orchestrator:
             result = self.consistency_checker.run(content)
             return result or "Checked"
         if intent in {"creative", "creativity", "brainstorm"}:
-            result = self.creativity_assistant.run(content)
+            result = self.creativity_assistant.run(content, log=log)
             return result or "Created"
         if intent == "search":
-            result = self.rag_search_agent.run(content)
+            result = self.rag_search_agent.run(content, log=log)
             return result if result is not None else ""
         if intent in {"structure", "analysis", "analyze"}:
             return self.structure_analyst.run(content)
 
-        return self.writer_agent.run(request)
+        return self.writer_agent.run(request, log=log)
 

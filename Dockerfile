@@ -12,6 +12,7 @@ RUN apt-get update && \
 
 # Install Python dependencies
 COPY requirements.txt ./
+COPY pip.conf /etc/pip.conf
 RUN pip install --no-cache-dir --root-user-action=ignore \
     --disable-pip-version-check -r requirements.txt
 

@@ -46,3 +46,11 @@ class FacetManager:
         """Return unresolved candidate counts for ``facet``."""
         mgr = self._managers.get(facet)
         return mgr.get_candidate_counts() if mgr else {}
+
+    # ------------------------------------------------------------------
+    def get_classification_logs(self) -> list[str]:
+        """Return classification events recorded for all facets."""
+        logs: list[str] = []
+        for mgr in self._managers.values():
+            logs.extend(mgr.get_classification_log())
+        return logs

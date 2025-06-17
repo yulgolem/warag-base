@@ -43,17 +43,26 @@ form.onsubmit = async (e) => {
     body: JSON.stringify({ message: text })
   });
   const data = await res.json();
+  for (const line of data.logs) {
+    log.innerHTML += `<div><i>${line}</i></div>`;
+  }
   log.innerHTML += `<div><b>Agent:</b> ${data.response}</div>`;
   log.scrollTop = log.scrollHeight;
 };
 document.getElementById('load').onclick = async () => {
   const r = await fetch('/load-samples');
   const d = await r.json();
+  for (const line of d.logs) {
+    log.innerHTML += `<div><i>${line}</i></div>`;
+  }
   log.innerHTML += `<div><i>${d.message}</i></div>`;
 };
 document.getElementById('clear').onclick = async () => {
   const r = await fetch('/clear-store');
   const d = await r.json();
+  for (const line of d.logs) {
+    log.innerHTML += `<div><i>${line}</i></div>`;
+  }
   log.innerHTML += `<div><i>${d.message}</i></div>`;
 };
 </script>
@@ -73,9 +82,10 @@ def chat():
     """Return agent response to posted message."""
     msg = request.json.get('message', '')
     app.logger.info("User: %s", msg)
-    response = agent.run(msg)
+    logs: list[str] = []
+    response = agent.run(msg, log=logs)
     app.logger.info("Agent: %s", response)
-    return jsonify({'response': response})
+    return jsonify({'response': response, 'logs': logs})
 
 
 @app.route('/load-samples')
@@ -85,15 +95,17 @@ def load_samples():
         'WBA_DOCS',
         str(Path(__file__).resolve().parent.parent.parent / 'docs' / 'wba_samples'),
     )
-    agent.wba.load_markdown_directory(sample_dir)
-    return jsonify({'message': 'Loaded'})
+    logs: list[str] = []
+    agent.wba.load_markdown_directory(sample_dir, log=logs)
+    return jsonify({'message': 'Loaded', 'logs': logs})
 
 
 @app.route('/clear-store')
 def clear_store():
     """Clear archived records from the RAG store."""
-    agent.wba.clear_rag_store()
-    return jsonify({'message': 'Cleared'})
+    logs: list[str] = []
+    agent.wba.clear_rag_store(log=logs)
+    return jsonify({'message': 'Cleared', 'logs': logs})
 
 
 if __name__ == "__main__":

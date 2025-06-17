@@ -4,7 +4,7 @@ from writeragents.agents.orchestrator.agent import Orchestrator
 def test_default_routes_to_writer(monkeypatch):
     called = {}
 
-    def fake_writer_run(self, prompt):
+    def fake_writer_run(self, prompt, *, log=None):
         called['writer'] = prompt
         return 'writer:' + prompt
 
@@ -73,7 +73,7 @@ def test_consistency_intent(monkeypatch):
 def test_creative_intent(monkeypatch):
     called = {}
 
-    def fake_run(self, text):
+    def fake_run(self, text, *, log=None):
         called['text'] = text
         return 'idea:' + text
 
@@ -87,7 +87,7 @@ def test_creative_intent(monkeypatch):
 def test_brainstorm_intent(monkeypatch):
     called = {}
 
-    def fake_run(self, text):
+    def fake_run(self, text, *, log=None):
         called['text'] = text
         return 'idea:' + text
 
@@ -101,7 +101,7 @@ def test_brainstorm_intent(monkeypatch):
 def test_search_intent(monkeypatch):
     called = {}
 
-    def fake_run(self, text):
+    def fake_run(self, text, *, log=None):
         called['text'] = text
         return 'found:' + text
 

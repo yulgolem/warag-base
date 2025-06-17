@@ -100,8 +100,9 @@ You can also start the full stack manually::
 
 ## Running Tests Locally
 
-Install dependencies in editable mode with the development extras::
+Install dependencies from PyPI and enable editable mode::
 
+    pip install -r requirements.txt
     pip install -e .[dev]
 
 Then execute `pytest` from the project root:
