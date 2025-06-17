@@ -35,6 +35,25 @@ class DatabaseMemory:
         self.conn.commit()
 
     # ------------------------------------------------------------------
+    def close(self) -> None:
+        """Close the underlying database connection."""
+        self.conn.close()
+
+    # ------------------------------------------------------------------
+    def __enter__(self) -> "DatabaseMemory":
+        """Return ``self`` when entering a ``with`` block."""
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: Any | None,
+    ) -> None:
+        """Close the connection when exiting a ``with`` block."""
+        self.close()
+
+    # ------------------------------------------------------------------
     def fetch(self, query: str, *params: Any) -> list[tuple]:
         """Return rows matching ``query``."""
         cur = self.conn.cursor()

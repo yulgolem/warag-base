@@ -25,7 +25,7 @@ def test_redis_memory(monkeypatch):
 
 def test_database_memory(tmp_path):
     db_path = tmp_path / "mem.db"
-    mem = DatabaseMemory(url=f"sqlite:///{db_path}")
-    mem.store("hello")
-    rows = mem.fetch("SELECT data FROM memory")
-    assert rows[0][0] == "hello"
+    with DatabaseMemory(url=f"sqlite:///{db_path}") as mem:
+        mem.store("hello")
+        rows = mem.fetch("SELECT data FROM memory")
+        assert rows[0][0] == "hello"
