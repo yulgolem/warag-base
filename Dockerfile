@@ -12,7 +12,8 @@ RUN apt-get update && \
 
 # Install Python dependencies
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --root-user-action=ignore \
+    --disable-pip-version-check -r requirements.txt
 
 # Copy runtime helper script for Ollama
 COPY entrypoint_ollama.sh /usr/local/bin/entrypoint_ollama.sh
