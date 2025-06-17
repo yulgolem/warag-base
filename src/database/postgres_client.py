@@ -7,7 +7,7 @@ from typing import Iterator
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from src.config.settings import settings
+from src.config.settings import Settings, ENV_FILE
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +16,7 @@ class PostgresClient:
     """Simple PostgreSQL client with connection pooling."""
 
     def __init__(self, dsn: str | None = None):
+        settings = Settings(_env_file=ENV_FILE)
         self.dsn = dsn or settings.postgres_dsn
         self._pool = None
 

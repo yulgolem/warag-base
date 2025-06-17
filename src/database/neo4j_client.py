@@ -6,7 +6,7 @@ from typing import Iterator
 
 from neo4j import GraphDatabase
 
-from src.config.settings import settings
+from src.config.settings import Settings, ENV_FILE
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +15,7 @@ class Neo4jClient:
     """Neo4j driver wrapper with basic session handling."""
 
     def __init__(self, uri: str | None = None, user: str | None = None, password: str | None = None):
+        settings = Settings(_env_file=ENV_FILE)
         self.uri = uri or settings.neo4j_uri
         self.user = user or settings.neo4j_user
         self.password = password or settings.neo4j_password
