@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 from flask import Flask, jsonify, render_template_string, request
 
 from writeragents.agents.orchestrator.agent import Orchestrator
@@ -26,6 +27,8 @@ INDEX_HTML = """
     <input id='input' autocomplete='off'/>
     <button>Send</button>
   </form>
+  <button id='load'>Load samples</button>
+  <button id='clear'>Clear store</button>
 <script>
 const log = document.getElementById('log');
 const form = document.getElementById('form');
@@ -42,6 +45,16 @@ form.onsubmit = async (e) => {
   const data = await res.json();
   log.innerHTML += `<div><b>Agent:</b> ${data.response}</div>`;
   log.scrollTop = log.scrollHeight;
+};
+document.getElementById('load').onclick = async () => {
+  const r = await fetch('/load-samples');
+  const d = await r.json();
+  log.innerHTML += `<div><i>${d.message}</i></div>`;
+};
+document.getElementById('clear').onclick = async () => {
+  const r = await fetch('/clear-store');
+  const d = await r.json();
+  log.innerHTML += `<div><i>${d.message}</i></div>`;
 };
 </script>
 </body>
@@ -63,6 +76,24 @@ def chat():
     response = agent.run(msg)
     app.logger.info("Agent: %s", response)
     return jsonify({'response': response})
+
+
+@app.route('/load-samples')
+def load_samples():
+    """Load sample markdown files into the archive."""
+    sample_dir = os.environ.get(
+        'WBA_DOCS',
+        str(Path(__file__).resolve().parent.parent.parent / 'docs' / 'wba_samples'),
+    )
+    agent.wba.load_markdown_directory(sample_dir)
+    return jsonify({'message': 'Loaded'})
+
+
+@app.route('/clear-store')
+def clear_store():
+    """Clear archived records from the RAG store."""
+    agent.wba.clear_rag_store()
+    return jsonify({'message': 'Cleared'})
 
 
 if __name__ == "__main__":
