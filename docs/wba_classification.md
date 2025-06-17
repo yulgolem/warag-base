@@ -31,3 +31,11 @@ wba:
 ```
 
 Adjust these values to tune how aggressively new types are created.
+
+## Automatic type extraction
+
+When loading Markdown files or handling multi paragraph input the archivist
+splits text into blocks separated by blank lines. Each block is analyzed
+semantically: the most frequent non‑stopword becomes the candidate type name.
+This allows a single file to yield multiple categorized records without relying
+on headings or file names.
