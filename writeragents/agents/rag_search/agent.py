@@ -18,8 +18,11 @@ class RAGSearchAgent:
         self.llm = llm_client or LLMClient()
 
     # ------------------------------------------------------------------
-    def run(self, query: str) -> str:
-        """Return an answer to ``query`` based on archived context."""
+    def run(self, query: str, *, log: list[str] | None = None) -> str:
+        """Return an answer to ``query`` based on archived context.
+
+        LLM interaction details are stored in ``log`` if provided.
+        """
         record, _score = self.archivist.search_semantic(query)
         if not record:
             return ""
@@ -27,4 +30,4 @@ class RAGSearchAgent:
             "Use the following context to answer the query:\n"
             f"{record['text']}\nQuery: {query}"
         )
-        return self.llm.generate(prompt)
+        return self.llm.generate(prompt, log=log)

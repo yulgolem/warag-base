@@ -44,7 +44,7 @@ def test_llmclient_ollama(monkeypatch):
 
 
 def test_creativity_assistant(monkeypatch):
-    monkeypatch.setattr(LLMClient, 'generate', lambda self, prompt: 'idea')
+    monkeypatch.setattr(LLMClient, 'generate', lambda self, prompt, *, log=None: 'idea')
     agent = CreativityAssistant(llm_client=LLMClient(endpoint='x'))
     assert agent.run('text') == 'idea'
 
@@ -53,7 +53,7 @@ def test_rag_search_agent(monkeypatch):
     store = RAGEmbeddingStore()
     wba = WorldBuildingArchivist(store=store)
     wba.archive_text('Dragons live in the north.')
-    monkeypatch.setattr(LLMClient, 'generate', lambda self, prompt: 'summary')
+    monkeypatch.setattr(LLMClient, 'generate', lambda self, prompt, *, log=None: 'summary')
     agent = RAGSearchAgent(archivist=wba, llm_client=LLMClient(endpoint='x'))
     assert agent.run('Where do dragons live?') == 'summary'
 

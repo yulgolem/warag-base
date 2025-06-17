@@ -14,6 +14,9 @@ class WriterAgent:
         self.llm = llm_client or LLMClient()
 
     # ------------------------------------------------------------------
-    def run(self, prompt: str) -> str:
-        """Generate a text response for ``prompt`` using the LLM."""
-        return self.llm.generate(prompt)
+    def run(self, prompt: str, *, log: list[str] | None = None) -> str:
+        """Generate a text response for ``prompt`` using the LLM.
+
+        The prompt and response are added to ``log`` if provided.
+        """
+        return self.llm.generate(prompt, log=log)

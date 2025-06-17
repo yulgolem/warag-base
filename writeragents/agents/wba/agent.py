@@ -1,4 +1,5 @@
 from pathlib import Path
+import logging
 from writeragents.storage import RAGEmbeddingStore, FileRAGStore
 from .faceted import FacetManager
 
@@ -34,9 +35,15 @@ class WorldBuildingArchivist:
             self.store.save()
 
     # ------------------------------------------------------------------
-    def load_markdown_directory(self, path: str) -> None:
+    def load_markdown_directory(self, path: str, *, log: list[str] | None = None) -> None:
         """Load and archive all ``*.md`` files under ``path``."""
+        logger = logging.getLogger(__name__)
+        start = len(self.facets.get_classification_logs())
         for md in Path(path).glob("*.md"):
+            msg = f"Loading {md.name}"
+            logger.info(msg)
+            if log is not None:
+                log.append(msg)
             text = md.read_text(encoding="utf-8")
             facets: dict[str, str] = {}
             for line in text.splitlines()[:5]:
@@ -46,6 +53,8 @@ class WorldBuildingArchivist:
                 elif lower.startswith("era:"):
                     facets["era"] = line.split(":", 1)[1].strip()
             self.archive_text(text, **facets)
+        if log is not None:
+            log.extend(self.facets.get_classification_logs()[start:])
 
     # ------------------------------------------------------------------
     def search_keyword(self, term: str) -> list[dict]:
@@ -69,10 +78,19 @@ class WorldBuildingArchivist:
         return mgr.get_candidate_counts()
 
     # ------------------------------------------------------------------
-    def clear_rag_store(self) -> None:
+    def clear_rag_store(self, *, log: list[str] | None = None) -> None:
         """Remove all archived records and reset classification state."""
+        logger = logging.getLogger(__name__)
+        msg = "Clearing RAG store"
+        logger.info(msg)
+        if log is not None:
+            log.append(msg)
         self.store.clear()
         self.facets = FacetManager(store=self.store)
+        msg = "RAG store cleared"
+        logger.info(msg)
+        if log is not None:
+            log.append(msg)
 
     def run(self, context: str) -> str:
         """Archive ``context`` while extracting basic facet information."""
