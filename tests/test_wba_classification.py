@@ -33,14 +33,14 @@ def test_facet_manager_autocreate():
     facets = FacetManager(store=store, threshold=0.9, candidate_limit=2)
 
     # First sighting does not create a record
-    assert facets.classify("era", "Bronze Age") is None
-    assert not [r for r in store.data if r.get("metadata", {}).get("category") == "facet-era"]
+    assert facets.classify("group", "Bronze Age") is None
+    assert not [r for r in store.data if r.get("metadata", {}).get("category") == "facet-group"]
 
     # Second sighting triggers creation
-    rec = facets.classify("era", "Bronze Age")
+    rec = facets.classify("group", "Bronze Age")
     assert rec["text"] == "Bronze Age"
-    assert rec["metadata"]["category"] == "facet-era"
-    assert len([r for r in store.data if r.get("metadata", {}).get("category") == "facet-era"]) == 1
+    assert rec["metadata"]["category"] == "facet-group"
+    assert len([r for r in store.data if r.get("metadata", {}).get("category") == "facet-group"]) == 1
 
 
 def test_classification_logging(caplog):

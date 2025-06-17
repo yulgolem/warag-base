@@ -13,10 +13,10 @@ New commands include::
     python -m writeragents wba-menu
 
 The ``wba-menu`` command launches an interactive prompt for loading markdown
-files into the archive, searching existing entries, and viewing statistics.
-Selecting option ``1`` now automatically loads the bundled sample documents from
-``docs/wba_samples`` (or the directory specified by the ``WBA_DOCS``
-environment variable). Option ``5`` clears the RAG store so you can start fresh.
+files into the archive or searching existing entries. Selecting option ``1``
+loads the bundled sample documents from ``docs/wba_samples`` (or the directory
+specified by the ``WBA_DOCS`` environment variable). Option ``4`` clears the RAG
+store so you can start fresh.
 
 When using Docker Compose you can run menu commands from the host with::
 

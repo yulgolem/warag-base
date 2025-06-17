@@ -24,13 +24,6 @@ def test_clear_rag_store_resets_data():
     assert store.data == []
 
 
-def test_run_assigns_semantic_type():
-    store = RAGEmbeddingStore()
-    wba = WorldBuildingArchivist(store=store, candidate_limit=1)
-    msg = wba.run("Рыцари охраняют замок")
-    assert msg == "Archived"
-    rec = store.data[-1]
-    assert rec["metadata"]["type"] == "Рыцари"
 
 
 
@@ -42,9 +35,7 @@ def test_load_markdown_directory_multi_paragraph(tmp_path):
         encoding="utf-8",
     )
     store = RAGEmbeddingStore()
-    wba = WorldBuildingArchivist(store=store, candidate_limit=1)
+    wba = WorldBuildingArchivist(store=store)
     wba.load_markdown_directory(str(tmp_path))
-    types = [r["metadata"]["type"] for r in store.data if "type" in r.get("metadata", {})]
-    assert "Рыцари" in types
-    assert "Торговля" in types
+    assert len(store.data) == 2
 

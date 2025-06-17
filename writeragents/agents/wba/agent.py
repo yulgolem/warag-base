@@ -178,20 +178,6 @@ class WorldBuildingArchivist:
         "между",
     }
 
-    def _semantic_type(self, text: str) -> str:
-        words = re.findall(r"[A-Za-zА-Яа-я]+", text.lower())
-        words = [w for w in words if w not in self._STOPWORDS and len(w) >= 3]
-        if not words:
-            return ""
-        freq = Counter(words)
-        return freq.most_common(1)[0][0].capitalize()
-
-    def _extract_facets(self, text: str) -> dict[str, str]:
-        facets: dict[str, str] = {}
-        typ = self._semantic_type(text)
-        if typ:
-            facets["type"] = typ
-        return facets
 
     def archive_text(self, text: str, **facets):
         """Store ``text`` in the RAG embedding store with optional facets."""
@@ -208,7 +194,6 @@ class WorldBuildingArchivist:
     def load_markdown_directory(self, path: str, *, log: list[str] | None = None) -> None:
         """Load and archive all ``*.md`` files under ``path``."""
         logger = logging.getLogger(__name__)
-        start = len(self.facets.get_classification_logs())
         for md in Path(path).glob("*.md"):
             msg = f"Loading {md.name}"
             logger.info(msg)
@@ -219,10 +204,7 @@ class WorldBuildingArchivist:
                 part = block.strip()
                 if not part:
                     continue
-                facets = self._extract_facets(part)
-                self.archive_text(part, **facets)
-        if log is not None:
-            log.extend(self.facets.get_classification_logs()[start:])
+                self.archive_text(part)
 
     # ------------------------------------------------------------------
     def search_keyword(self, term: str) -> list[dict]:
@@ -233,17 +215,6 @@ class WorldBuildingArchivist:
     def search_semantic(self, text: str) -> tuple[dict | None, float]:
         """Return the most semantically similar record to ``text``."""
         return self.store.find_similar(text)
-
-    # ------------------------------------------------------------------
-    def get_type_statistics(self) -> dict[str, int]:
-        """Return counts of archived records for each content type."""
-        mgr = self.facets._get_manager("type")
-        return mgr.get_type_counts()
-
-    def get_candidate_counts(self) -> dict[str, int]:
-        """Return current unresolved type candidate counts."""
-        mgr = self.facets._get_manager("type")
-        return mgr.get_candidate_counts()
 
     # ------------------------------------------------------------------
     def clear_rag_store(self, *, log: list[str] | None = None) -> None:
@@ -261,11 +232,10 @@ class WorldBuildingArchivist:
             log.append(msg)
 
     def run(self, context: str) -> str:
-        """Archive ``context`` while extracting basic facet information."""
+        """Archive ``context``."""
         for block in context.split("\n\n"):
             part = block.strip()
             if not part:
                 continue
-            facets = self._extract_facets(part)
-            self.archive_text(part, **facets)
+            self.archive_text(part)
         return "Archived"
