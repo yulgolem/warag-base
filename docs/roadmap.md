@@ -2,6 +2,19 @@
 
 This roadmap outlines upcoming milestones for WriterAgents as it evolves from a collection of command-line tools into a fully orchestrated web-based system.
 
+## Summary
+
+- Finalize CLI utilities and configuration management.
+- Introduce a simple Web UI for chat interactions.
+- Implement model integration with local and remote endpoints.
+- Complete agent logic and expand storage options.
+- Add an orchestrator to direct agents and review the [agent_flow](agent_flow.md).
+- Expand the World Building Archivist with self-organizing classification.
+- Incorporate a consistency checker and story-structure analysis module.
+- Implement dynamic story structures and clean up configuration.
+- Provide thorough tests and documentation.
+
+The sections below describe each area in more detail.
 ## 1. Model Integration
 - Implement calls to language models using the endpoints defined in the YAML configuration (e.g. `remote.yaml`).
 - Support both local servers like Ollama and remote API services.
