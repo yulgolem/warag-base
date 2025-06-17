@@ -23,6 +23,10 @@ Use `docker compose` to start PostgreSQL, Redis and the application container:
 docker compose up
 ```
 
+The default configuration file loaded in the `app` container points the
+Orchestrator to the ``ollama`` service at ``http://ollama:11434`` and uses the
+``qwen2.5:7b-instruct-q4_k_m`` model.
+
 The application mounts the project directory for live editing. PostgreSQL data is persisted in the `pgdata` volume.
 
 Stop the services with `Ctrl+C` and remove containers using:

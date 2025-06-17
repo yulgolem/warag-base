@@ -48,11 +48,13 @@ Phase 1 is complete. The project currently provides the CLI utilities and
 configuration management. A lightweight Web chat interface is also included as
 the starting point for phase 2.
 Run the CLI as shown above. It loads `writeragents/config/local.yaml` by
-default. Use `--config` or the `WRITERAG_CONFIG` environment variable to select
-a different YAML configuration file, such as `writeragents/config/remote.yaml`.
-The configuration also lets you define custom story templates under the
-`story_structure` section. See [docs/story_structure.md](docs/story_structure.md)
-for details.
+default. That file targets the ``ollama`` service at
+``http://ollama:11434`` and uses the ``qwen2.5:7b-instruct-q4_k_m`` model.
+Use ``--config`` or the ``WRITERAG_CONFIG`` environment variable to select a
+different YAML configuration file, such as
+`writeragents/config/remote.yaml`. The configuration also lets you define
+custom story templates under the ``story_structure`` section. See
+[docs/story_structure.md](docs/story_structure.md) for details.
 
 ## Architecture
 
