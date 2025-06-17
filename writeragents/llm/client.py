@@ -40,16 +40,28 @@ class LLMClient:
 
     # ------------------------------------------------------------------
     def generate(self, prompt: str) -> str:
-        """Return model output for ``prompt``."""
-        url = f"{self.endpoint}/chat/completions"
+        """Return model output for ``prompt`` using the configured endpoint."""
+
         headers = {"Content-Type": "application/json"}
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
-        payload = {"model": self.model, "messages": [{"role": "user", "content": prompt}]}
+
+        if "11434" in self.endpoint or "ollama" in self.endpoint:
+            url = f"{self.endpoint}/api/generate"
+            payload = {"model": self.model, "prompt": prompt, "stream": False}
+        else:
+            url = f"{self.endpoint}/chat/completions"
+            payload = {
+                "model": self.model,
+                "messages": [{"role": "user", "content": prompt}],
+            }
+
         resp = requests.post(url, json=payload, headers=headers, timeout=10)
         resp.raise_for_status()
         data = resp.json()
-        choices = data.get("choices", [])
-        if choices:
-            return choices[0].get("message", {}).get("content", "")
-        return ""
+        if "choices" in data:
+            choices = data.get("choices", [])
+            if choices:
+                return choices[0].get("message", {}).get("content", "")
+            return ""
+        return data.get("response", "")
