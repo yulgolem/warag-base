@@ -6,9 +6,12 @@ from .faceted import FacetManager
 class WorldBuildingArchivist:
     """Collects and maintains details about the fictional world."""
 
-    def __init__(self, store: RAGEmbeddingStore | None = None):
+    def __init__(
+        self, store: RAGEmbeddingStore | None = None, *, candidate_limit: int = 3
+    ) -> None:
         self.store = store or FileRAGStore()
-        self.facets = FacetManager(store=self.store)
+        self.facets = FacetManager(store=self.store, candidate_limit=candidate_limit)
+        self.candidate_limit = candidate_limit
 
     def archive_text(self, text: str, **facets):
         """Store ``text`` in the RAG embedding store with optional facets."""
@@ -62,6 +65,16 @@ class WorldBuildingArchivist:
         self.store.clear()
         self.facets = FacetManager(store=self.store)
 
-    def run(self, context):
-        # TODO: implement world building logic
-        pass
+    def run(self, context: str) -> str:
+        """Archive ``context`` while extracting basic facet information."""
+
+        facets: dict[str, str] = {}
+        for line in context.splitlines()[:5]:
+            lower = line.lower()
+            if lower.startswith("type:"):
+                facets["type"] = line.split(":", 1)[1].strip()
+            elif lower.startswith("era:"):
+                facets["era"] = line.split(":", 1)[1].strip()
+
+        self.archive_text(context, **facets)
+        return "Archived"

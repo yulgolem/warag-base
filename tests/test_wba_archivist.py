@@ -23,3 +23,13 @@ def test_clear_rag_store_resets_data():
     wba.clear_rag_store()
     assert store.data == []
 
+
+def test_run_archives_with_facets():
+    store = RAGEmbeddingStore()
+    wba = WorldBuildingArchivist(store=store, candidate_limit=1)
+    msg = wba.run("Type: Location\nEra: Bronze\nCity of gold")
+    assert msg == "Archived"
+    rec = store.data[-1]
+    assert rec["metadata"]["type"] == "Location"
+    assert rec["metadata"]["era"] == "Bronze"
+

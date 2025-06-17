@@ -64,6 +64,32 @@ def test_config_option_parsing(tmp_path, monkeypatch):
     assert redis_mem.host == "otherhost"
 
 
+def test_candidate_limit_default(monkeypatch):
+    called = {}
+
+    def fake_init(self, store=None, candidate_limit=3):
+        called["limit"] = candidate_limit
+
+    monkeypatch.setattr(WorldBuildingArchivist, "__init__", fake_init)
+    monkeypatch.setattr(WorldBuildingArchivist, "archive_text", lambda self, t: None)
+    main(["archive", "text"])
+    assert called["limit"] == 3
+
+
+def test_candidate_limit_from_config(tmp_path, monkeypatch):
+    cfg = tmp_path / "c.yaml"
+    cfg.write_text("wba:\n  candidate_limit: 5\n")
+    called = {}
+
+    def fake_init(self, store=None, candidate_limit=3):
+        called["limit"] = candidate_limit
+
+    monkeypatch.setattr(WorldBuildingArchivist, "__init__", fake_init)
+    monkeypatch.setattr(WorldBuildingArchivist, "archive_text", lambda self, t: None)
+    main(["--config", str(cfg), "archive", "text"])
+    assert called["limit"] == 5
+
+
 def _run_menu(monkeypatch, inputs):
     it = iter(inputs)
     monkeypatch.setattr("builtins.input", lambda _: next(it))
