@@ -29,4 +29,5 @@ COPY docs/wba_samples /app/docs/wba_samples
 ENV WBA_DOCS=/app/docs/wba_samples
 
 # Default command
-CMD ["python", "-m", "writeragents"]
+EXPOSE 5000
+CMD ["python", "-m", "writeragents.web.app"]
