@@ -11,8 +11,8 @@ from writeragents.agents.story_structure_analyst.agent import StoryStructureAnal
 class Orchestrator:
     """Route user requests to the appropriate specialized agent."""
 
-    def __init__(self) -> None:
-        self.wba = WorldBuildingArchivist()
+    def __init__(self, *, candidate_limit: int = 3) -> None:
+        self.wba = WorldBuildingArchivist(candidate_limit=candidate_limit)
         self.consistency_checker = ConsistencyChecker()
         self.creativity_assistant = CreativityAssistant()
         self.rag_search_agent = RAGSearchAgent()

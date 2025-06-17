@@ -76,26 +76,28 @@ def main(
     config = load_config(config_path)
 
     storage_cfg = config.get("storage", {})
+    wba_cfg = config.get("wba", {})
 
     long_term = DatabaseMemory(
         url=storage_cfg.get("database_url", "sqlite:///memory.db")
     )
     short_term = RedisMemory(host=storage_cfg.get("redis_host", "localhost"))
+    candidate_limit = int(wba_cfg.get("candidate_limit", 3))
 
     if args.command == "archive":
         from writeragents.agents.wba.agent import WorldBuildingArchivist
 
-        agent = WorldBuildingArchivist()
+        agent = WorldBuildingArchivist(candidate_limit=candidate_limit)
         agent.archive_text(args.text)
     elif args.command == "load":
         from writeragents.agents.wba.agent import WorldBuildingArchivist
 
-        agent = WorldBuildingArchivist()
+        agent = WorldBuildingArchivist(candidate_limit=candidate_limit)
         agent.load_markdown_directory(args.directory)
     elif args.command == "search":
         from writeragents.agents.wba.agent import WorldBuildingArchivist
 
-        agent = WorldBuildingArchivist()
+        agent = WorldBuildingArchivist(candidate_limit=candidate_limit)
         if args.mode == "keyword":
             results = agent.search_keyword(args.query)
         else:
@@ -106,7 +108,7 @@ def main(
     elif args.command == "wba-menu":
         from writeragents.agents.wba.agent import WorldBuildingArchivist
 
-        agent = WorldBuildingArchivist()
+        agent = WorldBuildingArchivist(candidate_limit=candidate_limit)
         while True:
             choice = input(
                 "1) Load Markdown directory\n"
@@ -155,7 +157,7 @@ def main(
     elif args.command == "write":
         from writeragents.agents.orchestrator.agent import Orchestrator
 
-        agent = Orchestrator()
+        agent = Orchestrator(candidate_limit=candidate_limit)
         agent.run(args.prompt)
 
     print(f"Using configuration: {args.config}")
