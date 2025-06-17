@@ -210,23 +210,6 @@ def test_menu_semantic_search(monkeypatch):
     assert called["text"] == "hi"
 
 
-def test_menu_stats(monkeypatch):
-    called = {}
-
-    def fake_stats(self):
-        called["stats"] = True
-        return {}
-
-    def fake_candidates(self):
-        called["cands"] = True
-        return {}
-
-    monkeypatch.setattr(WorldBuildingArchivist, "get_type_statistics", fake_stats)
-    monkeypatch.setattr(WorldBuildingArchivist, "get_candidate_counts", fake_candidates)
-    _run_menu(monkeypatch, ["4", "0"])
-    assert called == {"stats": True, "cands": True}
-
-
 def test_menu_clear_store(monkeypatch):
     called = {}
 
@@ -234,5 +217,5 @@ def test_menu_clear_store(monkeypatch):
         called["cleared"] = True
 
     monkeypatch.setattr(WorldBuildingArchivist, "clear_rag_store", fake_clear)
-    _run_menu(monkeypatch, ["5", "0"])
+    _run_menu(monkeypatch, ["4", "0"])
     assert called == {"cleared": True}

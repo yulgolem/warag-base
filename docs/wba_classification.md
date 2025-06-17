@@ -14,11 +14,11 @@ See the `ContentTypeManager` in `writeragents/agents/wba/classification.py` for 
 
 ## Faceted classification
 
-Beyond simple content types the archivist can track arbitrary **facets** such as
-`type` or `era`. Each facet is handled by a dedicated `ContentTypeManager`
-instance within ``FacetManager``. When a facet value is seen often enough it is
-saved as a meta-document with ``{"category": "facet-<name>"}``. Future archives
-then store the normalized value in the chunk metadata.
+Beyond simple content types the archivist can track arbitrary **facets**. Each
+facet is handled by a dedicated `ContentTypeManager` instance within
+``FacetManager``. When a facet value is seen often enough it is saved as a
+meta-document with ``{"category": "facet-<name>"}``. Future archives then store
+the normalized value in the chunk metadata.
 
 ## Configuration
 
@@ -32,10 +32,3 @@ wba:
 
 Adjust these values to tune how aggressively new types are created.
 
-## Automatic type extraction
-
-When loading Markdown files or handling multi paragraph input the archivist
-splits text into blocks separated by blank lines. Each block is analyzed
-semantically: the most frequent non‑stopword becomes the candidate type name.
-This allows a single file to yield multiple categorized records without relying
-on headings or file names.

@@ -133,8 +133,7 @@ def main(
                 "1) Load Markdown directory\n"
                 "2) Keyword search\n"
                 "3) Semantic search\n"
-                "4) Show type stats\n"
-                "5) Clear RAG store\n"
+                "4) Clear RAG store\n"
                 "0) Exit\n"
                 "Select option: "
             ).strip()
@@ -160,15 +159,6 @@ def main(
                 if res:
                     print(res["text"])
             elif choice == "4":
-                type_counts = agent.get_type_statistics()
-                candidate_counts = agent.get_candidate_counts()
-                print("Content types:")
-                for name, count in type_counts.items():
-                    print(f"  {name}: {count}")
-                print("Unresolved candidates:")
-                for name, count in candidate_counts.items():
-                    print(f"  {name}: {count}")
-            elif choice == "5":
                 agent.clear_rag_store()
                 print("RAG store cleared")
             elif choice == "0":
