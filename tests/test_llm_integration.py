@@ -64,7 +64,9 @@ def test_llmclient_error(monkeypatch, caplog):
 
     monkeypatch.setattr(requests, 'post', fake_post)
     client = LLMClient(endpoint='http://example.com/v1', model='gpt', api_key='k')
+    log: list[str] = []
     with caplog.at_level(logging.ERROR):
-        result = client.generate('hi')
+        result = client.generate('hi', log=log)
     assert result == ''
     assert any('fail' in m for m in caplog.messages)
+    assert log == ['prompt: hi', 'error: fail']

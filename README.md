@@ -107,6 +107,9 @@ Install dependencies from PyPI and enable editable mode::
     pip install -r requirements.txt
     pip install -e .[dev]
 
+If package downloads fail with a network access error, see
+[docs/network_access.md](docs/network_access.md) for troubleshooting tips.
+
 Then execute `pytest` from the project root:
 
     pytest -q

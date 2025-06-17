@@ -46,7 +46,8 @@ class LLMClient:
         """Return model output for ``prompt`` using the configured endpoint.
 
         If ``log`` is provided, the prompt and final response are appended to
-        that list for inspection.
+        that list for inspection. On request failures, an empty string is
+        returned and the error is added to ``log``.
         """
 
         logger.info("LLM prompt: %s", prompt)
@@ -73,6 +74,8 @@ class LLMClient:
             data = resp.json()
         except (requests.RequestException, ValueError) as exc:
             logger.error("LLM request failed: %s", exc)
+            if log is not None:
+                log.append(f"error: {exc}")
             return ""
         if "choices" in data:
             choices = data.get("choices", [])
