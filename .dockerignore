@@ -1,5 +1,30 @@
-# Logs should not be included in Docker image
+# Logs and temporary files
 logs/
 *.log
 *.jsonl
 
+# Development files
+.git/
+.pytest_cache/
+__pycache__/
+*.pyc
+.coverage
+htmlcov/
+.env
+.env.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentation
+README.md
+docs/
+*.md

@@ -1,9 +1,28 @@
-pydantic==2.11.7
-pydantic-settings==2.9.1
-python-dotenv>=1.0
-pytest>=7.4
+# Core framework - точные версии для стабильности
+crewai==0.28.8
+streamlit==1.29.0
+
+# Databases  
+neo4j==5.15.0
 psycopg2-binary==2.9.9
 pgvector==0.2.4
-neo4j==5.15.0
-streamlit==1.35.0
-tiktoken==0.6.0
+
+# Data models - совместимые версии
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# AI/LLM
+ollama==0.1.7
+requests==2.31.0
+tiktoken==0.5.2
+
+# Testing
+pytest==7.4.3
+pytest-cov==4.1.0
+
+# System utilities
+python-multipart==0.0.6
+
+# Fallback dependencies (если основные не ставятся)
+# wheel>=0.40.0
+# setuptools>=65.0.0

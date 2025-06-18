@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg15
+    container_name: worldbuilding_postgres
+    environment:
+      POSTGRES_DB: worldbuilding
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_postgres.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: worldbuilding_neo4j
+    environment:
+      NEO4J_AUTH: neo4j/neo4j
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*
+    ports:
+      - "7474:7474"  # HTTP
+      - "7687:7687"  # Bolt
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p neo4j 'RETURN 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: worldbuilding_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:11434/api/tags || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    # Post-startup model loading
+    command: >
+      sh -c "ollama serve &
+             sleep 10 &&
+             ollama pull nuextract &&
+             ollama pull saiga &&
+             wait"
+
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: worldbuilding_app
+    ports:
+      - "8501:8501"
+    environment:
+      - DATABASE__HOST=postgres
+      - DATABASE__PORT=5432
+      - DATABASE__NAME=worldbuilding
+      - DATABASE__USER=postgres
+      - DATABASE__PASSWORD=postgres
+      - NEO4J__URI=bolt://neo4j:7687
+      - NEO4J__USER=neo4j
+      - NEO4J__PASSWORD=neo4j
+      - OLLAMA__BASE_URL=http://ollama:11434
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8501/_stcore/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+  neo4j_data:
+  neo4j_logs:
+  ollama_data:
+
+networks:
+  default:
+    name: worldbuilding_network
