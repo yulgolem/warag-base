@@ -5,6 +5,7 @@ __pycache__/
 *.so
 .Python
 build/
+ollama_data/
 develop-eggs/
 dist/
 downloads/
@@ -39,6 +40,7 @@ htmlcov/
 venv/
 ENV/
 env/
+doc/tasks/
 
 # IDE
 .vscode/

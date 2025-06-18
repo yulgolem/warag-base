@@ -32,6 +32,7 @@ RUN pip install --no-cache-dir \
 # Copy application code
 COPY src/ ./src/
 COPY tests/ ./tests/
+COPY scripts/ ./scripts/
 
 # Create logs directory
 RUN mkdir -p logs

@@ -46,8 +46,7 @@ services:
     ports:
       - "11434:11434"
     volumes:
-      - ollama_data:/root/.ollama
-      - ollama_models:/root/.ollama/models
+      - ./ollama_data:/root/.ollama
     deploy:
       resources:
         reservations:

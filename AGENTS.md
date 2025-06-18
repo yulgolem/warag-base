@@ -131,79 +131,182 @@ def test_ollama_connection_failure():
 
 **SPECIFICATIONS**:
 ```python
-class Relationship(BaseModel):
+class Relationship:
     source_entity: str
     target_entity: str
     relation_type: str  # knows, located_in, part_of, owns, related_to, interacts_with
-    description: Optional[str] = None
+    description: str
     confidence: float
     source_text: str
 
 class RelationshipAnalyzerAgent:
     def __init__(self, ollama_base_url: str = "http://ollama:11434"):
-        self.ollama_url = ollama_base_url
-        self.model_name = "saiga"
+        self.ollama_url = ollama_base_url.rstrip("/")
+        self.model_name = "ilyagusev/saiga_llama3"
+        self.logger = get_agent_logger()
+        self.max_retries = 3
+        self.base_delay = 1.0
+        self.max_pairs_per_chunk = 10
         
     def create_agent(self) -> Agent:
         return Agent(
             role="Relationship Analysis Expert",
             goal="Identify relationships between entities in text",
-            backstory="Specialist in understanding connections and relationships between narrative elements",
+            backstory=(
+                "Specialist in understanding connections and relationships between narrative elements. "
+                "Expert in Russian language analysis and context interpretation."
+            ),
             verbose=True,
-            allow_delegation=False
+            allow_delegation=False,
+            tools=[],
+            max_iter=1,
+            memory=False
         )
     
-    def analyze_relationships(self, entities: List[Entity], original_text: str) -> List[Relationship]:
+    def analyze_relationships(
+        self, 
+        entities: List[Entity], 
+        original_text: str,
+        confidence_threshold: float = 0.75
+    ) -> List[Relationship]:
         """Analyze relationships between entities in the given text"""
-        # IMPLEMENT: Generate entity pairs for analysis
-        # IMPLEMENT: Call Saiga model for each pair
-        # IMPLEMENT: Parse relationship responses
-        # IMPLEMENT: Filter by confidence threshold (0.75)
-        pass
+        # Generate and prioritize entity pairs
+        pairs = self._generate_entity_pairs(entities)
+        prioritized_pairs = self._prioritize_entity_pairs(pairs, original_text)
+        
+        relationships = []
+        for entity1, entity2 in prioritized_pairs:
+            relationship = self._analyze_entity_pair(
+                entity1, entity2, original_text, confidence_threshold
+            )
+            if relationship:
+                relationships.append(relationship)
+                log_relationship_analysis(relationship)
+                
+        return relationships
+        
+    def analyze_relationships_batch(
+        self,
+        entities_per_chunk: List[List[Entity]],
+        original_texts: List[str],
+        confidence_threshold: float = 0.75
+    ) -> List[List[Relationship]]:
+        """Batch processing of multiple chunks"""
+        results = []
+        total_chunks = len(entities_per_chunk)
+        
+        for i, (entities, text) in enumerate(zip(entities_per_chunk, original_texts)):
+            self.logger.info(f"Processing chunk {i+1}/{total_chunks}")
+            try:
+                chunk_relationships = self.analyze_relationships(
+                    entities, text, confidence_threshold
+                )
+                results.append(chunk_relationships)
+            except Exception as e:
+                self.logger.error(f"Error processing chunk {i+1}: {str(e)}")
+                results.append([])
+                
+        return results
 ```
 
 **PROMPT TEMPLATE**:
 ```python
-def get_relationship_prompt(entity1: str, entity2: str, text: str) -> str:
-    return f"""### Задача: Определить отношения между сущностями в тексте.
+RELATIONSHIP_PROMPT_TEMPLATE = """### Задача: Определить отношения между сущностями в тексте.
 
 ### Сущности для анализа:
-- Сущность 1: {entity1}
-- Сущность 2: {entity2}
+- Сущность 1: {entity1_name} (тип: {entity1_type})
+- Сущность 2: {entity2_name} (тип: {entity2_type})
 
-### Текст:
+### Контекст (оригинальный текст):
 {text}
 
 ### Возможные типы отношений:
 - knows (знает/знаком с)
-- located_in (находится в)
-- part_of (является частью)
-- owns (владеет)
-- related_to (связан с)
-- interacts_with (взаимодействует с)
+- located_in (находится в/расположен в)
+- part_of (является частью/принадлежит)
+- owns (владеет/обладает)
+- related_to (связан с/относится к)
+- interacts_with (взаимодействует с/работает с)
 
-### Формат ответа (только JSON):
+### Инструкции:
+1. Найдите упоминания обеих сущностей в тексте
+2. Определите есть ли между ними отношение
+3. Выберите наиболее подходящий тип отношения
+4. Оцените уверенность от 0.75 до 1.0
+5. Укажите фрагмент текста, подтверждающий отношение
+
+### Формат ответа (только JSON, без объяснений):
 {{
   "relationship": {{
-    "source_entity": "{entity1}",
-    "target_entity": "{entity2}",
+    "source_entity": "{entity1_name}",
+    "target_entity": "{entity2_name}",
     "relation_type": "тип_отношения",
-    "description": "краткое_описание",
+    "description": "краткое_описание_отношения",
     "confidence": 0.85,
     "source_text": "фрагмент_текста_подтверждающий_отношение"
   }}
 }}
 
-### Правила:
-1. Если отношения нет - верните {{"relationship": null}}
-2. Уверенность 0.75-1.0 на основе ясности контекста
-3. Описание до 150 символов
-4. Только валидный JSON
+### Если отношения нет:
+{{
+  "relationship": null
+}}
 
 ### Ответ:"""
 ```
 
+**KEY FEATURES**:
+1. Entity Pair Generation
+   - Optimized pair generation with max 10 pairs per chunk
+   - Filters same-type pairs (except person-person)
+   - Prioritizes pairs by proximity in text
+
+2. Relationship Analysis
+   - Uses Saiga model via Ollama API
+   - Retry logic with exponential backoff
+   - Confidence threshold filtering (0.75)
+   - Robust JSON parsing with error handling
+
+3. Batch Processing
+   - Efficient processing of multiple chunks
+   - Progress tracking and error handling
+   - Maintains chunk-level relationship grouping
+
+4. Performance Optimizations
+   - Pair prioritization by text proximity
+   - Type-based pair filtering
+   - Batch processing for multiple chunks
+   - Efficient error handling and logging
+
 **REQUIRED TESTS**: `tests/test_agents/test_relationship_analyzer.py`
+```python
+def test_analyze_relationships_success():
+    # Test successful relationship detection
+    
+def test_analyze_relationships_no_relation():
+    # Test case where no relationship exists
+    
+def test_entity_pair_generation():
+    # Test pair generation and optimization
+    
+def test_confidence_filtering():
+    # Test filtering low confidence relationships
+    
+def test_batch_processing():
+    # Test batch processing efficiency
+    
+def test_saiga_response_parsing():
+    # Test parsing various Saiga response formats
+    
+def test_russian_text_analysis():
+    # Test with Russian language text
+    
+def test_pair_prioritization():
+    # Test proximity-based pair prioritization
+    
+def test_large_entity_set():
+    # Test performance with many entities (>10)
+```
 
 ### 3. Create Graph Coordinator Agent
 **File**: `src/agents/graph_coordinator.py`

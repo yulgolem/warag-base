@@ -40,3 +40,16 @@
 - Основные зависимости: CrewAI, Streamlit, Neo4j, pgvector
 - Все сервисы запускаются через Docker Compose
 - Модели Ollama сохраняются в именованном томе 
+
+## PowerShell Notes
+
+### Docker Commands in PowerShell
+- Use `-T` flag for long-running commands: `docker compose exec -T container command`
+- For interactive commands: `docker compose exec container command`
+- For debugging: `$VerbosePreference = "Continue"` before command
+- For output capture: `command | Tee-Object -FilePath output.log`
+
+### Common Issues
+- PSReadLine errors: Use `-T` flag or switch to `cmd.exe`
+- Encoding issues: `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`
+- Path issues: Use `$PWD` or `[System.IO.Path]::GetFullPath()` 
