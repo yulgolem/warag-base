@@ -36,26 +36,32 @@ application together with PostgreSQL, Neo4j and Ollama services.
    cp .env.example .env
    ```
 
-3. Start all services:
+3. Build and start all services:
 
-   ```bash
-   docker compose up -d
-   ```
+    ```bash
+    docker compose up -d --build
+    ```
 
-4. Verify that containers are running:
+4. View application logs:
+
+    ```bash
+    docker compose logs -f app
+    ```
+
+5. Verify that containers are running:
 
    ```bash
    docker compose ps
    ```
 
-5. The Streamlit interface will be available at
+6. The Streamlit interface will be available at
    [http://localhost:8501](http://localhost:8501).
 
-6. To run tests inside the app container use:
+7. To run tests inside the app container use:
 
    ```bash
    docker compose exec app pytest -q
    ```
 
-Stop the stack with `docker compose down` when you are done.
+Stop the stack with `docker compose down` when you are done. For a clean restart use `docker compose down -v` before bringing the stack up again.
 
