@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir --upgrade \
 COPY requirements.txt .
 
 # Install Python dependencies with increased timeout and retries
-RUN pip install --no-cache-dir \
+RUN pip install -v --no-cache-dir \
     --timeout=300 \
     --retries=5 \
     --index-url=https://pypi.org/simple/ \

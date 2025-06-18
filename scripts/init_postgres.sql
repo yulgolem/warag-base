@@ -9,7 +9,9 @@ CREATE TABLE IF NOT EXISTS chunks (
     text TEXT NOT NULL,
     tokens_count INTEGER NOT NULL,
     embedding vector(384),  -- FRIDA embedding size
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    source_file TEXT,
+    metadata TEXT
 );
 
 -- Create index for vector similarity search
@@ -24,8 +26,20 @@ CREATE TABLE IF NOT EXISTS entities_cache (
     description TEXT,
     embedding vector(384),
     source_file VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    chunk_id TEXT,
+    confidence FLOAT
 );
 
 CREATE INDEX IF NOT EXISTS entities_embedding_idx ON entities_cache 
 USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+
+-- Добавить недостающие поля в таблицу chunks
+ALTER TABLE IF EXISTS chunks
+    ADD COLUMN IF NOT EXISTS source_file TEXT,
+    ADD COLUMN IF NOT EXISTS metadata TEXT;
+
+-- Добавить недостающие поля в таблицу entities_cache
+ALTER TABLE IF EXISTS entities_cache
+    ADD COLUMN IF NOT EXISTS chunk_id TEXT,
+    ADD COLUMN IF NOT EXISTS confidence FLOAT;

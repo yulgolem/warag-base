@@ -26,3 +26,19 @@ python-multipart==0.0.6
 # Fallback dependencies (если основные не ставятся)
 # wheel>=0.40.0
 # setuptools>=65.0.0
+
+# Additional dependencies
+python-dotenv
+numpy
+pandas
+scikit-learn
+nltk
+spacy
+fastapi
+uvicorn
+
+# Logging
+loguru
+
+# Additional sentence-transformers
+sentence-transformers
