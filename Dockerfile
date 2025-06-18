@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 
 # Upgrade pip and install wheel
 RUN pip install --no-cache-dir --upgrade \
-    pip==23.3.1 \
+    pip==25.1.1 \
     setuptools==68.2.2 \
     wheel==0.41.2
 
@@ -27,7 +27,6 @@ RUN pip install --no-cache-dir \
     --timeout=300 \
     --retries=5 \
     --index-url=https://pypi.org/simple/ \
-    --extra-index-url=https://pypi.python.org/simple/ \
     -r requirements.txt
 
 # Copy application code
