@@ -7,7 +7,7 @@
 - **Backend**: Python 3.11, CrewAI
 - **Frontend**: Streamlit (доступен на localhost:8501)
 - **Databases**: PostgreSQL 15 + pgvector, Neo4j Community 5.x
-- **AI**: Ollama (NuExtract, Saiga), FRIDA embeddings
+- **AI**: Ollama (NuExtract, ilyagusev/saiga_llama3), FRIDA embeddings
 - **Infrastructure**: Docker Compose
 
 ## File Structure
@@ -244,7 +244,7 @@ class EntityExtractorAgent:
 **File**: `src/agents/relationship_analyzer.py`
 **Deliverable**: CrewAI агент для анализа связей
 **Requirements**:
-- Использует Saiga через Ollama
+- Использует ilyagusev/saiga_llama3 через Ollama
 - Входные данные: список сущностей + оригинальный текст
 - Определяет связи типа: "knows", "located_in", "part_of", "owns", "related_to" - это тоже динамические типы связей на основе обрабатываемых сущностей, не фиксируемые в коде.
 - Confidence score для каждой связи

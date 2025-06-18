@@ -56,6 +56,10 @@ logs/
 # Docker
 .dockerignore
 
+# Ollama models
+.ollama/
+ollama_models/
+
 # Database data (keep schemas only)
 *.db
 *.sqlite
